@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from https://nvcore.shop/documentation.html by HTTrack Website Copier/3.x [XR&CO], Tue, 22 Sep 2026 15:09:35 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | NVCORE SHOP</title>
+    <link rel="shortcut icon" href="assets/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    <meta name="description"
+        content="Official documentation for NVCore FiveM scripts. Detailed installation guides, configuration references, and optimization tips.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="docs.css">
+</head>
+
+<body>
+
+
+
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-wrapper">
+        <div class="loader-content">
+            <img src="assets/logo.png" alt="NVCore" class="loader-logo">
+            <span class="loader-text"></span>
+        </div>
+    </div>
+
+    <!-- Sticky Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="container">
+            <a class='logo' href='index.html'>
+                <img src="assets/logo.png" alt="NVCore Logo" class="nav-logo-img">
+                NVCORE<span class="dot">.</span>SHOP
+            </a>
+            <ul class="nav-links">
+                <li><a href='index.html#home'>Home</a></li>
+                <li><a href='index.html#about'>About</a></li>
+                <li><a href='index.html#projects'>Scripts</a></li>
+                <li><a class='nav-cta active' href='documentation.html'>Documentation</a></li>
+                <li><a href='index.html#services'>Services</a></li>
+                <li class="nav-user-container">
+                    <a href="javascript:void(0)" class="nav-discord-login" id="nav-login-trigger">
+                        <svg class="discord-svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.5868 0-.1635-.3847-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1971.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                        </svg> Login
+                    </a>
+                    <div class="user-dropdown glass" id="user-dropdown">
+                        <div class="dropdown-header">
+                            <img src="#" alt="Avatar" class="user-avatar" id="dropdown-avatar">
+                            <div class="user-info">
+                                <span class="user-name" id="dropdown-name">Username</span>
+                                <span class="user-status">Verified Member</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="https://discord.gg/Cr6zAJD2vV" target="_blank" class="dropdown-item">
+                            <i data-lucide="help-circle"></i> Support
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class='dropdown-item admin-link' href='admin.html' style='display: none;'>
+                            <i data-lucide="shield"></i> Admin Panel
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item logout-btn" id="logout-trigger">
+                            <i data-lucide="log-out"></i> Logout
+                        </button>
+                    </div>
+                </li>
+                <li>
+                    <a href="https://discord.gg/Cr6zAJD2vV" target="_blank" class="button">
+                        <div class="inner">Contact</div>
+                    </a>
+                </li>
+            </ul>
+            <div class="mobile-toggle" id="mobile-toggle">
+                <i data-lucide="menu"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="docs-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="docs-sidebar glass">
+                <div class="docs-nav">
+                    <div class="docs-nav-title">Getting Started</div>
+                    <div class="docs-nav-item active" data-target="doc-intro">
+                        <i data-lucide="info"></i> Introduction
+                    </div>
+                    <div class="docs-nav-item" data-target="doc-install">
+                        <i data-lucide="terminal"></i> General Installation
+                    </div>
+
+                    <div class="docs-nav-title">Escrow Scripts</div>
+                    <div class="docs-nav-item" data-target="doc-spawneffect">
+                        <i data-lucide="shield-check"></i> nv-Spawneffect
+                    </div>
+                    <div class="docs-nav-item" data-target="doc-fpsbooster">
+                        <i data-lucide="zap"></i> NV-FPS Booster
+                    </div>
+
+                    <div class="docs-nav-title">Open Source</div>
+                    <div class="docs-nav-item" data-target="doc-spawneffect-os">
+                        <i data-lucide="code-2"></i> nv-spawneffect (OS)
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Documentation Content -->
+            <div class="docs-content">
+
+                <!-- Introduction Section -->
+                <div id="doc-intro" class="doc-section active">
+                    <div class="doc-header">
+                        <h1 class="doc-title">Welcome to <span>NVCore</span></h1>
+                        <p class="doc-subtitle">Elevating the FiveM experience with high-performance resources and
+                            unparalleled support. Our documentation provides everything you need to get your server
+                            running at its peak.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge"><i data-lucide="shield"></i> Verified Resources</div>
+                            <div class="doc-badge"><i data-lucide="zap"></i> Performance First</div>
+                            <div class="doc-badge"><i data-lucide="message-circle"></i> 24/7 Support</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="heart"></i> Our Philosophy</h2>
+                        <p>At NVCore, we believe that scripts should be more than just code—they should be experiences.
+                            Every resource we build is optimized for zero performance impact, ensuring your players
+                            stay immersed without lag or crashes.</p>
+
+                        <div class="doc-alert info">
+                            <i data-lucide="info"></i>
+                            <div>
+                                <strong>Join our Discord!</strong> Most of our scripts receive weekly updates based on
+                                community feedback.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="shield-check"></i> Why Trust NVCore?</h2>
+                        <div class="doc-features">
+                            <div class="doc-feature-card">
+                                <i data-lucide="lock"></i>
+                                <h4>Safe & Secure</h4>
+                                <p>We use CFX Escrow to protect our intellectual property while ensuring seamless
+                                    integration with your server identity.</p>
+                            </div>
+                            <div class="doc-feature-card">
+                                <i data-lucide="gauge"></i>
+                                <h4>Highly Optimized</h4>
+                                <p>Resources are tested on 40+ player servers to guarantee stability under heavy load.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- General Installation Section -->
+                <div id="doc-install" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">General <span>Installation</span></h1>
+                        <p class="doc-subtitle">A universal guide to installing NVCore resources on your FiveM server.
+                        </p>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="download"></i> The Basics</h2>
+                        <p>Most NVCore resources follow the standard FiveM installation pattern:</p>
+                        <ol>
+                            <li>Claim the resource on <a href="https://nvcore-shop.tebex.io/category/3220666" target="_blank">Tebex</a>.
+                            </li>
+                            <li>Download the folder from your <a href="https://keymaster.fivem.net/asset-grants"
+                                    target="_blank">FiveM Keymaster</a>.</li>
+                            <li>Extract the folder into your server's <code>resources</code> directory.</li>
+                            <li>Add <code>ensure [resource_name]</code> to your <code>server.cfg</code>.</li>
+                        </ol>
+
+                        <div class="doc-code-block" data-lang="server.cfg">
+                            <pre><code># Ensure this is ABOVE any scripts that depend on it
+ensure nv-spawneffect</code></pre>
+                        </div>
+
+                        <div class="doc-alert warning">
+                            <i data-lucide="alert-triangle"></i>
+                            <div>
+                                <strong>Important:</strong> Never rename the folder of an Escrow-protected script.
+                                Doing so will break the encryption and prevent the script from starting.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- nv-Spawneffect Section -->
+                <div id="doc-spawneffect" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">nv-Spawneffect</h1>
+                        <p class="doc-subtitle">The ultimate cinematic spawn system for immersive roleplay servers.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge escrow"><i data-lucide="lock"></i> CFX Escrowed</div>
+                            <div class="doc-badge"><i data-lucide="box"></i> Standalone</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="settings"></i> Configuration</h2>
+                        <p>Customize the camera angles, music, and effects in the <code>config.lua</code>:</p>
+                        <div class="doc-code-block" data-lang="config.lua">
+                            <pre><code>Config = {}
+
+Config.Music = true
+Config.MusicVolume = 0.5
+Config.CamHeight = 500.0 -- Height from which camera starts
+Config.CamDuration = 5000 -- In milliseconds</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="star"></i> Key Features</h2>
+                        <div class="doc-features">
+                            <div class="doc-feature-card">
+                                <i data-lucide="video"></i>
+                                <h4>Smooth Cams</h4>
+                                <p>Interpolated camera movements for a triple-A gaming feel.</p>
+                            </div>
+                            <div class="doc-feature-card">
+                                <i data-lucide="music"></i>
+                                <h4>Audio Support</h4>
+                                <p>Built-in support for NUI-based audio cues.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- nv-spawneffect (OS) Section -->
+                <div id="doc-spawneffect-os" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">nv-spawneffect <span>(OS)</span></h1>
+                        <p class="doc-subtitle">Full access version for developers who want total control over the
+                            system.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge opensource"><i data-lucide="code-2"></i> Open Source</div>
+                            <div class="doc-badge"><i data-lucide="box"></i> Standalone</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="code"></i> Developer Access</h2>
+                        <p>The Open Source version includes clean, commented code. You can find the main logic in
+                            <code>client/main.lua</code> and the UI templates in <code>html/</code>.
+                        </p>
+
+                        <div class="doc-alert info">
+                            <i data-lucide="terminal"></i>
+                            <div>
+                                <strong>Support:</strong> While we offer installation support for OS versions,
+                                custom modifications are the responsibility of the server owner.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NV-FPS Booster Section -->
+                <div id="doc-fpsbooster" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">NV-FPS <span>Booster</span></h1>
+                        <p class="doc-subtitle">A premium, high-performance optimization tool.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge free"><i data-lucide="gift"></i> Free Resource</div>
+                            <div class="doc-badge escrow"><i data-lucide="lock"></i> CFX Escrowed</div>
+                            <div class="doc-badge"><i data-lucide="zap"></i> Zero Idle Usage</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="activity"></i> Optimization Levels</h2>
+                        <p>The FPS Booster provides 5 distinct levels of optimization to suit any hardware
+                            configuration:
+                        </p>
+                        <ul>
+                            <li><strong>OFF:</strong> Standard GTA V settings. Best for high-end PCs.</li>
+                            <li><strong>LITE:</strong> Minor tweaks to shadows and lighting distances.</li>
+                            <li><strong>MEDIUM:</strong> Balanced mode. Reduces shadow resolution and particle quality.
+                            </li>
+                            <li><strong>HIGH:</strong> Aggressive LOD (Level of Detail) scaling and occlusion disabling.
+                            </li>
+                            <li><strong>ULTRA:</strong> Maximum performance mode. Disables all non-essential shadows,
+                                reduces LOD to minimum, and clears world data.</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="cpu"></i> Advanced Features</h2>
+                        <div class="doc-features">
+                            <div class="doc-feature-card">
+                                <i data-lucide="magic-wand"></i>
+                                <h4>Special NV Boost</h4>
+                                <p>Our proprietary engine that applies cinematic filters while optimizing CPU-bound
+                                    draw calls.</p>
+                            </div>
+                            <div class="doc-feature-card">
+                                <i data-lucide="moon"></i>
+                                <h4>Night Performance</h4>
+                                <p>Toggles city-wide lighting systems to provide a massive FPS jump during night cycles.
+                                </p>
+                            </div>
+                            <div class="doc-feature-card">
+                                <i data-lucide="refresh-cw"></i>
+                                <h4>Memory Cleaner</h4>
+                                <p>Triggers instant Lua garbage collection to clear stale data from your system cache.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="terminal"></i> Usage & Commands</h2>
+                        <p>The script is fully automated but can be controlled via a premium NUI menu:</p>
+                        <div class="doc-code-block" data-lang="Commands">
+                            <pre><code>/fps - Opens FPS Booster Menu</code></pre>
+                        </div>
+
+                        <h3>Requirements</h3>
+                        <p>To ensure notifications work correctly, the following dependencies are required:</p>
+                        <ul>
+                            <li><strong>ox_lib:</strong> Used for modern notifications and UI elements.</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="settings"></i> Configuration Preview</h2>
+                        <p>You can easily modify the command and notification settings in the
+                            <code>shared/config.lua</code> file:
+                        </p>
+                        <div class="doc-code-block" data-lang="config.lua">
+                            <pre><code>Config = {}
+Config.Command = "fps"
+Config.Notifications = {
+    Position = "top-right",
+    Duration = 3000
+}
+Config.LodScales = {
+    Ultra = 0.4,
+    High = 0.8
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">NVCORE<span>.</span>SHOP</div>
+                <p>&copy; 2024 NVCore Development Team. All rights reserved.</p>
+                <div class="footer-links" style="margin: 1rem 0; display: flex; gap: 2rem; justify-content: center; font-size: 0.9rem; color: var(--text-muted);">
+                    <a href='index.html#home'>Home</a>
+                    <a href='documentation.html'>Documentation</a>
+                    <a class='admin-link' href='admin.html' style='display: none;'>Admin Panel</a>
+                </div>
+                <div class="footer-socials">
+                    <a href="https://discord.gg/Cr6zAJD2vV" target="_blank"><i data-lucide="message-square"></i></a>
+                    <a href="https://nvcore-shop.tebex.io/category/3220666" target="_blank"><i data-lucide="shopping-cart"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Discord Login Modal (Global) -->
+    <div id="discord-modal" class="modal-wrapper">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass">
+            <div class="modal-close" id="modal-close">
+                <i data-lucide="x"></i>
+            </div>
+            <div class="modal-body">
+                <div class="modal-step">AUTHENTICATION GATEWAY</div>
+                <div class="discord-logo-glow">
+                    <i data-lucide="message-square" class="discord-icon"></i>
+                </div>
+                <h3>Link your Discord</h3>
+                <p>To ensure a secure purchase and automated license delivery, please link your Discord account with the NVCore store.</p>
+
+                <div class="modal-features">
+                    <div class="m-feature">
+                        <i data-lucide="shield-check"></i>
+                        <span>Secure License</span>
+                    </div>
+                    <div class="m-feature">
+                        <i data-lucide="zap"></i>
+                        <span>Instant Delivery</span>
+                    </div>
+                    <div class="m-feature">
+                        <i data-lucide="user"></i>
+                        <span>Discord Role</span>
+                    </div>
+                </div>
+
+                <button id="discord-login-btn" class="button btn-discord btn-block">
+                    <div class="inner">
+                        <i data-lucide="message-square"></i>
+                        Connect with Discord
+                    </div>
+                </button>
+
+                <div class="modal-footer-text">
+                    <i data-lucide="lock"></i> Secured by Discord OAuth2
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Store Auth Modal -->
+    <div id="store-auth-modal" class="modal-wrapper">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass">
+            <div class="modal-close" id="store-modal-close">
+                <i data-lucide="x"></i>
+            </div>
+            <div class="modal-body">
+                <div class="modal-step">LICENSE PROTECTION</div>
+                <div class="auth-icon-wrap">
+                    <div class="icon-ring"></div>
+                    <i data-lucide="shield-check" class="auth-icon"></i>
+                </div>
+                <h3>Verify your Identity</h3>
+                <p>To access the store and ensure automated license delivery to your Keymaster, please verify your Discord account.</p>
+
+                <div class="auth-benefits">
+                    <div class="benefit-item">
+                        <i data-lucide="zap"></i>
+                        <div class="benefit-text">
+                            <strong>Instant Grant</strong>
+                            <span>Script added to Keymaster instantly</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i data-lucide="message-square"></i>
+                        <div class="benefit-text">
+                            <strong>Discord Access</strong>
+                            <span>Automatic role & support access</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="button btn-primary btn-block store-login-btn">
+                    <div class="inner">Authorize with Discord</div>
+                </button>
+
+                <div class="modal-footer-text">
+                    <i data-lucide="lock"></i> Verified by CFX & Tebex
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.docs-nav-item');
+            const sections = document.querySelectorAll('.doc-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(sec => sec.classList.remove('active'));
+
+                    item.classList.add('active');
+                    const targetId = item.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) targetSection.classList.add('active');
+
+                    if (window.innerWidth <= 1100) {
+                        window.scrollTo({
+                            top: document.querySelector('.docs-content').offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+    </script>
+</body>
+
+
+<!-- Mirrored from https://nvcore.shop/documentation.html by HTTrack Website Copier/3.x [XR&CO], Tue, 22 Sep 2026 15:09:35 GMT -->
+</html>

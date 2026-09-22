@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from https://nvcore.shop/admin by HTTrack Website Copier/3.x [XR&CO], Tue, 22 Sep 2026 15:09:35 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | NVCORE</title>
+    <link rel="shortcut icon" href="assets/logo.png" type="image/png">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --accent-bg: rgba(0, 242, 255, 0.05);
+        }
+
+        body {
+            background-color: #050508;
+            overflow: hidden;
+            /* Sidebar/Main handles scrolling */
+        }
+
+        .admin-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar-logo {
+            height: 32px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            color: var(--text-muted);
+            transition: 0.3s;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--grad-primary);
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(0, 242, 255, 0.3);
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .user-pill img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .top-bar {
+            height: var(--header-height);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 15, 0.4);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .page-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            scroll-behavior: smooth;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+        }
+
+        .stat-card .icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Console Section */
+        .console-container {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+
+        .terminal-box {
+            background: rgba(5, 5, 10, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .terminal-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            overflow-y: auto;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .terminal-input-wrap {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            color: white;
+            width: 100%;
+            outline: none;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 400;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.08);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 242, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Announcements & Forms */
+        .form-card {
+            max-width: 1000px;
+            padding: 3rem;
+            background: rgba(15, 15, 25, 0.4);
+            border-radius: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+
+        .template-option {
+            padding: 1.5rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .template-option i {
+            width: 24px;
+            height: 24px;
+            transition: 0.3s;
+        }
+
+        .template-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .template-option.active {
+            background: rgba(0, 242, 255, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .template-option.active i {
+            transform: scale(1.2);
+        }
+
+        /* Transcripts & Tickets */
+        .transcript-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .transcript-card {
+            padding: 1.75rem;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            background: rgba(15, 15, 20, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border-top: 1px solid var(--glass-border);
+            border-right: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .transcript-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .ticket-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .message-preview {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .message-preview::before {
+            content: 'LAST MESSAGE';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            background: #0d0d12;
+            padding: 0 8px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        /* Transcript Modal */
+        .viewer-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .viewer-modal.active {
+            display: flex;
+        }
+
+        .viewer-content {
+            width: 100%;
+            max-width: 900px;
+            max-height: 85vh;
+            background: var(--bg-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .viewer-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .viewer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .message-bubble {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .message-author {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Instagram-style Chat Bubbles */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Added Border */
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-bubble.staff {
+            align-self: flex-end;
+            background: rgba(0, 242, 255, 0.1);
+            /* Subtle background */
+            color: white;
+            border-bottom-right-radius: 4px;
+            border-color: rgba(0, 242, 255, 0.3);
+            /* Primary border */
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.1);
+        }
+
+        .chat-bubble.user {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border-bottom-left-radius: 4px;
+            border-color: rgba(255, 255, 255, 0.15);
+            /* White border */
+        }
+
+        .chat-bubble.system {
+            align-self: center;
+            background: rgba(15, 15, 20, 0.6);
+            color: var(--text-muted);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            max-width: 90%;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .chat-meta {
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .staff .chat-meta {
+            justify-content: flex-end;
+        }
+
+        .system .chat-meta {
+            justify-content: center;
+        }
+
+        .chat-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+        }
+
+        .chat-embed {
+            margin-top: 0.75rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .embed-field {
+            margin-top: 0.5rem;
+        }
+
+        .embed-field-name {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Lock Screen */
+        #auth-lock {
+            position: fixed;
+            inset: 0;
+            background: #050508;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .lock-content {
+            max-width: 400px;
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Auth Lock Screen -->
+    <div id="auth-lock">
+        <div class="lock-content">
+            <div class="blob-wrapper" style="opacity: 0.2;">
+                <div class="background-blob blob-1"></div>
+            </div>
+            <i data-lucide="lock" style="width: 64px; height: 64px; color: var(--primary); margin-bottom: 2rem;"></i>
+            <h1 style="margin-bottom: 1rem;">Restricted Area</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2.5rem;">This dashboard is reserved for authorized NVCore
+                administrators. Please verify your identity.</p>
+            <a class='button' href='index.html'>
+                <div class="inner">Return to Safety</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.png" alt="NVCore" class="sidebar-logo">
+                <div style="font-family: 'Outfit'; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px;">
+                    NVCORE<span style="color: var(--primary);">.</span>ADMIN
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-item active" onclick="switchSection('overview', this)">
+                    <i data-lucide="layout-dashboard"></i> Overview
+                </div>
+                <div class="nav-item" onclick="switchSection('active-tickets', this)">
+                    <i data-lucide="ticket"></i> Active Tickets
+                </div>
+                <div class="nav-item" onclick="switchSection('transcripts', this)">
+                    <i data-lucide="message-square"></i> Transcripts
+                </div>
+                <div class="nav-item" onclick="switchSection('console', this)">
+                    <i data-lucide="terminal"></i> Live Console
+                </div>
+                <div class="nav-item" onclick="switchSection('announcements', this)">
+                    <i data-lucide="megaphone"></i> Announcements
+                </div>
+                <div class="nav-item" onclick="switchSection('dm-manager', this)">
+                    <i data-lucide="mail"></i> DM Manager
+                </div>
+                <div class="nav-item" onclick="switchSection('audit-logs', this)">
+                    <i data-lucide="list"></i> Audit Logs
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-pill">
+                    <img id="user-avatar" src="assets/logo.png" alt="User">
+                    <div style="overflow: hidden;">
+                        <div id="user-name"
+                            style="font-weight: 600; font-size: 0.9rem; white-space: nowrap; text-overflow: ellipsis;">
+                            Admin</div>
+                        <div id="user-status" style="font-size: 0.75rem; color: var(--primary);">Staff Member</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div id="page-title" style="font-family: 'Outfit'; font-weight: 700; font-size: 1.5rem;">Dashboard
+                    Overview</div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="button" style="padding: 0.5rem;" onclick="location.reload()">
+                        <div class="inner" style="padding: 8px 15px;"><i data-lucide="refresh-cw"
+                                style="width: 18px;"></i> Sync</div>
+                    </button>
+                    <a class='button' href='index.html'>
+                        <div class="inner" style="padding: 8px 15px;"><i data-lucide="external-link"
+                                style="width: 18px;"></i> Exit</div>
+                    </a>
+                </div>
+            </header>
+
+            <div class="page-scroll">
+                <!-- Section: Overview -->
+                <section id="overview" class="dashboard-section active">
+                    <div class="stats-row">
+                        <div class="stat-card glass">
+                            <div class="icon"><i data-lucide="users"></i></div>
+                            <div class="stat-label">System Users</div>
+                            <div class="stat-number" style="font-size: 2rem; margin: 0.5rem 0;">1,248+</div>
+                            <div style="font-size: 0.8rem; color: #22c55e;">+12% from last week</div>
+                        </div>
+                        <div class="stat-card glass">
+                            <div class="icon" style="color: #00ff88; background: rgba(0, 255, 136, 0.1);"><i
+                                    data-lucide="ticket"></i></div>
+                            <div class="stat-label">Total Tickets</div>
+                            <div id="stat-tickets" class="stat-number" style="font-size: 2rem; margin: 0.5rem 0;">--
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Historical interaction logs</div>
+                        </div>
+                        <div class="stat-card glass">
+                            <div class="icon" style="color: #ff00ff; background: rgba(255, 0, 255, 0.1);"><i
+                                    data-lucide="activity"></i></div>
+                            <div class="stat-label">Bot Status</div>
+                            <div class="stat-number" style="font-size: 2rem; margin: 0.5rem 0; color: #00ff88;">ONLINE
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">v2.4.0 (Latest)</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
+                    <div id="recent-list" class="glass" style="padding: 0;">
+                        <div style="padding: 2rem; text-align: center; color: var(--text-muted);">Loading system
+                            activity...</div>
+                    </div>
+                </section>
+
+                <!-- Section: Active Tickets -->
+                <section id="active-tickets" class="dashboard-section">
+                    <div
+                        style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2>Active <span>Tickets</span></h2>
+                            <p style="color: var(--text-muted);">Real-time support channel monitoring.</p>
+                        </div>
+                        <button class="button" onclick="loadActiveTickets()">
+                            <div class="inner"><i data-lucide="refresh-cw"></i> Refresh</div>
+                        </button>
+                    </div>
+
+                    <div id="active-tickets-list" class="transcript-grid">
+                        <!-- Loaded via JS -->
+                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                            Loading active tickets...</div>
+                    </div>
+                </section>
+
+                <!-- Section: Transcripts -->
+                <section id="transcripts" class="dashboard-section">
+                    <div class="dashboard-header"
+                        style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h2>Ticket <span>Transcripts</span></h2>
+                            <p style="color: var(--text-muted);">Browse historical support conversations.</p>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="transcript-search" class="input-field"
+                                placeholder="Search channel or staff..." style="width: 300px;">
+                        </div>
+                    </div>
+
+                    <div id="transcript-list" class="transcript-grid">
+                        <!-- Data loaded via JS -->
+                    </div>
+                </section>
+
+                <!-- Section: Console -->
+                <section id="console" class="dashboard-section">
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Live <span>Console</span></h2>
+                        <p style="color: var(--text-muted);">Broadcast messages directly to server channels.</p>
+                    </div>
+
+                    <div class="console-container">
+                        <div class="terminal-box glass">
+                            <div class="terminal-header">
+                                <i data-lucide="terminal" style="width: 14px;"></i>
+                                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">NVCORE
+                                    BRIDGE v2.0</span>
+                            </div>
+                            <div id="terminal-output" class="terminal-body">
+                                <div style="color: #22c55e;">[SYSTEM] Secure bridge established.</div>
+                                <div style="color: var(--text-muted);">[SYSTEM] Awaiting command input...</div>
+                            </div>
+                            <div class="terminal-input-wrap">
+                                <input type="text" id="console-input" class="input-field"
+                                    placeholder="Type a message to send...">
+                                <button class="button" onclick="sendToConsole()">
+                                    <div class="inner">Send Message</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass" style="padding: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;">Console Config</h4>
+                            <div class="form-group">
+                                <label class="form-label">Target Channel ID</label>
+                                <input type="text" id="console-channel" class="input-field" placeholder="1234567890..."
+                                    value="1498033833457483937">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Message Style</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button id="style-plain" class="button active" style="flex: 1; padding: 0.5rem;"
+                                        onclick="setStyle('plain')">
+                                        <div class="inner" style="padding: 8px;">Plain</div>
+                                    </button>
+                                    <button id="style-embed" class="button" style="flex: 1; padding: 0.5rem;"
+                                        onclick="setStyle('embed')">
+                                        <div class="inner" style="padding: 8px;">Embed</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="embed-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Embed Title</label>
+                                    <input type="text" id="console-title" class="input-field"
+                                        placeholder="Broadcast Title">
+                                </div>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;">
+                                <i data-lucide="info" style="width: 12px; vertical-align: middle;"></i>
+                                Channel IDs can be found by enabling Developer Mode in Discord.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Announcements -->
+                <section id="announcements" class="dashboard-section">
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Announcement <span>Manager</span></h2>
+                        <p style="color: var(--text-muted);">Send formatted announcements with @everyone pings.</p>
+                    </div>
+
+                    <div class="form-card glass">
+                        <div class="form-group">
+                            <label class="form-label">Target Channel</label>
+                            <input type="text" id="announce-channel" class="input-field" placeholder="Channel ID..."
+                                value="1408756119006089312">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Template Type</label>
+                            <div class="template-selector">
+                                <div class="template-option active" data-template="default"
+                                    onclick="selectTemplate(this)">
+                                    <i data-lucide="megaphone" style="margin-bottom: 0.5rem;"></i>
+                                    <div>General</div>
+                                </div>
+                                <div class="template-option" data-template="update" onclick="selectTemplate(this)">
+                                    <i data-lucide="rocket" style="margin-bottom: 0.5rem;"></i>
+                                    <div>Update</div>
+                                </div>
+                                <div class="template-option" data-template="maintenance" onclick="selectTemplate(this)">
+                                    <i data-lucide="wrench" style="margin-bottom: 0.5rem;"></i>
+                                    <div>Maintenance</div>
+                                </div>
+                                <div class="template-option" data-template="sale" onclick="selectTemplate(this)">
+                                    <i data-lucide="shopping-bag" style="margin-bottom: 0.5rem;"></i>
+                                    <div>Sale</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Subject / Title</label>
+                            <input type="text" id="announce-title" class="input-field"
+                                placeholder="Headline for the announcement...">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Image URL (Optional)</label>
+                            <input type="text" id="announce-image" class="input-field" placeholder="https://i.imgur.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Announcement Content</label>
+                            <textarea id="announce-content" class="input-field"
+                                style="min-height: 150px; resize: vertical;"
+                                placeholder="Markdown supported..."></textarea>
+                        </div>
+
+                        <button class="button btn-block" style="margin-top: 1rem; height: 60px;"
+                            onclick="publishAnnouncement()">
+                            <div class="inner"
+                                style="background: var(--grad-primary); font-size: 1.1rem; border-radius: 14px;">
+                                <i data-lucide="send"></i> Publish Announcement
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section: DM Manager -->
+                <section id="dm-manager" class="dashboard-section">
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Direct <span>DM Manager</span></h2>
+                        <p style="color: var(--text-muted);">Send private messages to any user via their Discord ID.</p>
+                    </div>
+
+                    <div class="form-card glass">
+                        <div class="form-group">
+                            <label class="form-label">User Discord ID</label>
+                            <input type="text" id="dm-user-id" class="input-field" placeholder="384592039485039...">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Message Style</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button id="dm-style-plain" class="button active" style="flex: 1; padding: 0.5rem;" onclick="setDmStyle('plain')">
+                                    <div class="inner" style="padding: 8px;">Plain Text</div>
+                                </button>
+                                <button id="dm-style-embed" class="button" style="flex: 1; padding: 0.5rem;" onclick="setDmStyle('embed')">
+                                    <div class="inner" style="padding: 8px;">Embed</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="dm-image-group" class="form-group" style="display: none;">
+                            <label class="form-label">Image URL (Optional)</label>
+                            <input type="text" id="dm-image-url" class="input-field" placeholder="https://i.imgur.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Message Content</label>
+                            <textarea id="dm-content" class="input-field" style="min-height: 120px;" placeholder="Hey, your ticket has been updated..."></textarea>
+                        </div>
+
+                        <button class="button btn-block" style="height: 60px;" onclick="sendDM()">
+                            <div class="inner" style="background: var(--grad-primary); border-radius: 14px;">
+                                <i data-lucide="send"></i> Send Direct Message
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section: Audit Logs -->
+                <section id="audit-logs" class="dashboard-section">
+                    <div style="margin-bottom: 2rem;">
+                        <h2>System <span>Audit Logs</span></h2>
+                        <p style="color: var(--text-muted);">A record of all administrative actions taken on the platform.</p>
+                    </div>
+
+                    <div class="glass" style="padding: 0;">
+                        <div id="audit-log-list" style="max-height: 600px; overflow-y: auto;">
+                            <!-- Data loaded via JS -->
+                            <div style="padding: 4rem; text-align: center; color: var(--text-muted);">Loading system logs...</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Transcript Viewer Modal -->
+    <div id="viewer-modal" class="viewer-modal">
+        <div class="viewer-content glass">
+            <div class="viewer-header">
+                <div>
+                    <h3 id="modal-title" style="font-family: 'Outfit';">Transcript View</h3>
+                    <div id="modal-subtitle" style="font-size: 0.8rem; color: var(--text-muted);">Channel History</div>
+                </div>
+                <button onclick="closeModal()"
+                    style="background: none; border: none; color: white; font-size: 2rem; line-height: 1; cursor: pointer;">&times;</button>
+            </div>
+            <div id="viewer-body" class="viewer-body">
+                <!-- Messages -->
+            </div>
+            <div id="chat-input-container" class="chat-input-area" style="display: none;">
+                <input type="text" id="modal-reply-input" class="input-field" placeholder="Write a response...">
+                <button class="button" id="modal-reply-btn">
+                    <div class="inner" style="padding: 12px 20px;"><i data-lucide="send"></i></div>
+                </button>
+            </div>
+            <div id="transcript-footer"
+                style="padding: 1rem 2rem; border-top: 1px solid var(--glass-border); background: rgba(255,255,255,0.02); display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 0.8rem; color: var(--text-muted);">NVCore Transcript System</div>
+                <button class="button" onclick="window.print()">
+                    <div class="inner" style="padding: 8px 15px;"><i data-lucide="printer" style="width: 14px;"></i>
+                        Print</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let API_BASE = ''; // Default relative
+        const SOULIXER_URL = 'http://ny-us-01.soulixer.in:25432/';
+        const LOCAL_URL = 'http://localhost:8080/';
+
+        async function initConnectivity() {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // Check if local bot is running
+                try {
+                    const res = await fetch(`${LOCAL_URL}/api/health`);
+                    if (res.ok) {
+                        API_BASE = LOCAL_URL;
+                        console.log('Connected to Local Bot on 8080');
+                    } else {
+                        throw new Error();
+                    }
+                } catch (e) {
+                    API_BASE = SOULIXER_URL;
+                    console.log('Local bot not found, using Soulixer Server');
+                }
+            }
+        }
+        let currentTranscripts = [];
+        let selectedTemplate = 'default';
+        let messageStyle = 'plain';
+        let dmStyle = 'plain';
+        let chatPollInterval = null;
+        let lastMessageTimestamp = 0;
+
+        // Auth Check
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initConnectivity();
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            const lock = document.getElementById('auth-lock');
+
+            if (!session || !session.access_token || !session.isStaff) {
+                lock.style.display = 'flex';
+                return;
+            }
+
+            // Success - Hide lock and init
+            lock.style.display = 'none';
+            document.getElementById('user-name').innerText = session.username;
+            if (session.avatar) {
+                document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${session.id}/${session.avatar}.png`;
+            }
+
+            lucide.createIcons();
+            loadTranscripts();
+        });
+
+        // Navigation
+        function switchSection(sectionId, el) {
+            // Update Nav
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+
+            // Update Page Title
+            const titles = {
+                'overview': 'Dashboard Overview',
+                'active-tickets': 'Active Support Tickets',
+                'transcripts': 'Ticket Transcripts',
+                'console': 'Live Console Bridge',
+                'announcements': 'Announcement Manager',
+                'dm-manager': 'Direct DM Tool',
+                'audit-logs': 'System Audit Logs'
+            };
+            document.getElementById('page-title').innerText = titles[sectionId];
+
+            // Update Section
+            document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            if (sectionId === 'active-tickets') loadActiveTickets();
+            if (sectionId === 'transcripts') loadTranscripts();
+            if (sectionId === 'audit-logs') loadAuditLogs();
+        }
+
+        // Active Tickets Logic
+        async function loadActiveTickets() {
+            const list = document.getElementById('active-tickets-list');
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/active`, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No active tickets found.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(t => `
+                    <div class="transcript-card glass">
+                        <div style="display: flex; justify-content: space-between; align-items: center;" onclick="viewConversation('${t.id}', '${t.name}')">
+                            <span class="ticket-badge">Support Channel</span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: monospace; opacity: 0.5;">ID: ${t.id}</span>
+                                <button class="button" style="padding: 0.2rem; border-radius: 6px; background: rgba(255, 77, 77, 0.1);" onclick="event.stopPropagation(); closeTicket('${t.id}')">
+                                    <div class="inner" style="padding: 4px 8px; color: #ff4d4d; border-radius: 6px;"><i data-lucide="lock" style="width: 12px;"></i></div>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <h3 style="font-size: 1.25rem; background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;" onclick="viewConversation('${t.id}', '${t.name}')">
+                            #${t.name}
+                        </h3>
+                        
+                        <div class="message-preview" onclick="viewConversation('${t.id}', '${t.name}')" style="cursor: pointer;">
+                            <div style="font-weight: 800; color: var(--primary); margin-bottom: 0.4rem; font-size: 0.75rem;">
+                                ${t.lastMessage?.author || 'System'}
+                            </div>
+                            <div style="color: var(--text-main); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${t.lastMessage?.content || '*No interaction yet*'}
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin: 0.5rem 0 0 0;">
+                            <input type="text" id="reply-${t.id}" class="input-field" placeholder="Write a response..." style="font-size: 0.9rem;">
+                        </div>
+
+                        <button class="button btn-block" style="height: 50px;" onclick="replyToTicket('${t.id}')">
+                            <div class="inner" style="background: rgba(255,255,255,0.03); border-radius: 12px; font-size: 0.9rem;">
+                                <i data-lucide="send" style="width: 16px;"></i> Send Reply
+                            </div>
+                        </button>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+
+            } catch (error) {
+                list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #ff4d4d;">Error loading active tickets.</div>';
+            }
+        }
+
+        async function viewConversation(channelId, channelName, isPolling = false) {
+            const modal = document.getElementById('viewer-modal');
+            const body = document.getElementById('viewer-body');
+            const inputContainer = document.getElementById('chat-input-container');
+            const footer = document.getElementById('transcript-footer');
+
+            if (!isPolling) {
+                document.getElementById('modal-title').innerText = `#${channelName}`;
+                document.getElementById('modal-subtitle').innerText = `Active Support Session`;
+                body.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i data-lucide="loader-2" class="spin"></i> Fetching conversation...</div>';
+                lucide.createIcons();
+                modal.classList.add('active');
+                inputContainer.style.display = 'flex';
+                footer.style.display = 'none';
+            }
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/messages/${channelId}`, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                const messages = await response.json();
+
+                // Only update if there are new messages
+                const newest = messages.length > 0 ? messages[messages.length - 1].timestamp : 0;
+                if (newest <= lastMessageTimestamp && isPolling) return;
+                lastMessageTimestamp = newest;
+
+                const wasAtBottom = body.scrollHeight - body.scrollTop <= body.clientHeight + 100;
+
+                body.innerHTML = messages.map(m => {
+                    const session = JSON.parse(localStorage.getItem('discord_user'));
+
+                    // Logic: "Us" (Staff) on right, "Them" (Customer) on left
+                    // If the logged in user sent it, or any other staff member, it's "Staff"
+                    let bubbleClass = 'user'; // Default to left (them)
+                    if (m.type === 'staff' || m.authorId === session.id) {
+                        bubbleClass = 'staff'; // Right (us)
+                    }
+
+                    let embedHtml = '';
+                    if (m.embeds && m.embeds.length > 0) {
+                        embedHtml = m.embeds.map(e => `
+                            <div class="chat-embed" style="border-left-color: ${e.color ? '#' + e.color.toString(16).padStart(6, '0') : 'var(--primary)'}">
+                                ${e.title ? `<div style="font-weight: 800; margin-bottom: 0.3rem;">${e.title}</div>` : ''}
+                                ${e.description ? `<div style="opacity: 0.9;">${e.description}</div>` : ''}
+                                ${e.fields ? e.fields.map(f => `
+                                    <div class="embed-field">
+                                        <div class="embed-field-name">${f.name}</div>
+                                        <div>${f.value}</div>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        `).join('');
+                    }
+
+                    const content = (m.content || '').replace(/<@!?(\d+)>/g, '@User').replace(/<@&(\d+)>/g, '@Role');
+                    const isStaff = bubbleClass === 'staff';
+                    const isSystem = bubbleClass === 'system';
+
+                    return `
+                        <div class="chat-bubble ${bubbleClass}">
+                            <div class="chat-meta">
+                                ${isStaff || isSystem ? '' : `<img src="${m.avatar}" class="chat-avatar">`}
+                                <span style="font-weight: 700;">${m.author}</span>
+                                <span>${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                ${isStaff ? `<img src="${m.avatar}" class="chat-avatar">` : ''}
+                            </div>
+                            <div style="white-space: pre-wrap;">${content}${embedHtml}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                if (wasAtBottom || !isPolling) {
+                    body.scrollTop = body.scrollHeight;
+                }
+
+                if (!isPolling) {
+                    // Setup Modal Reply
+                    const replyBtn = document.getElementById('modal-reply-btn');
+                    const replyInput = document.getElementById('modal-reply-input');
+
+                    replyBtn.onclick = async () => {
+                        const content = replyInput.value.trim();
+                        if (!content) return;
+
+                        replyBtn.disabled = true;
+                        await replyToTicket(channelId, content);
+                        replyInput.value = '';
+                        replyBtn.disabled = false;
+                        viewConversation(channelId, channelName, true); // Immediate refresh
+                    };
+
+                    replyInput.onkeypress = (e) => {
+                        if (e.key === 'Enter') replyBtn.click();
+                    };
+
+                    // Start Polling
+                    if (chatPollInterval) clearInterval(chatPollInterval);
+                    chatPollInterval = setInterval(() => {
+                        viewConversation(channelId, channelName, true);
+                    }, 3000);
+                }
+
+            } catch (err) {
+                if (!isPolling) body.innerHTML = '<div style="text-align: center; padding: 2rem; color: #ff4d4d;">Failed to load messages.</div>';
+            }
+            lucide.createIcons();
+        }
+
+        async function closeTicket(channelId) {
+            if (!confirm('Are you sure you want to close and delete this ticket channel?')) return;
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/close`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ channelId })
+                });
+
+                if (response.ok) {
+                    alert('Ticket closing initiated. Channel will be deleted shortly.');
+                    loadActiveTickets();
+                    closeModal();
+                } else {
+                    alert('Failed to close ticket.');
+                }
+            } catch (err) {
+                alert('Network Error');
+            }
+        }
+
+        async function replyToTicket(channelId, forcedContent = null) {
+            const input = document.getElementById(`reply-${channelId}`);
+            const content = forcedContent || input?.value.trim();
+            if (!content) return;
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            let btn = null;
+            let original = null;
+
+            if (!forcedContent && input) {
+                btn = input.parentElement.nextElementSibling.querySelector('.inner');
+                original = btn.innerHTML;
+                btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Sending...';
+                lucide.createIcons();
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ channelId, content })
+                });
+
+                if (response.ok) {
+                    if (input) input.value = '';
+                    if (!forcedContent) {
+                        alert('Reply sent!');
+                        loadActiveTickets();
+                    }
+                } else {
+                    alert('Failed to send reply.');
+                }
+            } catch (err) {
+                alert('Network Error');
+            } finally {
+                if (btn) {
+                    btn.innerHTML = original;
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        // Transcripts Logic
+        async function loadTranscripts() {
+            const list = document.getElementById('transcript-list');
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/transcripts`, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                if (!response.ok) throw new Error('API Error');
+
+                const data = await response.json();
+                currentTranscripts = data;
+
+                document.getElementById('stat-tickets').innerText = data.length;
+
+                if (data.length === 0) {
+                    list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No transcripts found.</div>';
+                    return;
+                }
+
+                renderTranscripts(data);
+                renderRecentActivity(data);
+
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--error);">Failed to connect to API server.</div>';
+            }
+        }
+
+        function renderTranscripts(data) {
+            const list = document.getElementById('transcript-list');
+            list.innerHTML = data.map((t, index) => `
+                <div class="transcript-card glass" onclick="viewTranscript(${index})">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="padding: 0.3rem 0.7rem; background: rgba(0, 242, 255, 0.1); color: var(--primary); border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">
+                            ${t.channel.split('-')[0]}
+                        </span>
+                        <i data-lucide="chevron-right" style="width: 16px; color: var(--text-muted);"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">#${t.channel}</h3>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.4rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="user" style="width: 14px;"></i> Staff: ${t.closedBy}</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="message-square" style="width: 14px;"></i> ${t.messageCount} messages</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="clock" style="width: 14px;"></i> ${new Date(t.closedAt).toLocaleDateString()}</div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderRecentActivity(data) {
+            const recent = document.getElementById('recent-list');
+            const subset = data.slice(0, 5);
+
+            recent.innerHTML = subset.map(t => `
+                <div style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                            <i data-lucide="archive" style="width: 20px;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.95rem;">Ticket Archived: #${t.channel}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Closed by ${t.closedBy}</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">${new Date(t.closedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function viewTranscript(index) {
+            const t = currentTranscripts[index];
+            const modal = document.getElementById('viewer-modal');
+            const body = document.getElementById('viewer-body');
+            const inputContainer = document.getElementById('chat-input-container');
+            const footer = document.getElementById('transcript-footer');
+
+            document.getElementById('modal-title').innerText = `Transcript: #${t.channel}`;
+            document.getElementById('modal-subtitle').innerText = `Closed by ${t.closedBy} on ${new Date(t.closedAt).toLocaleString()}`;
+
+            inputContainer.style.display = 'none';
+            footer.style.display = 'flex';
+
+            body.innerHTML = t.messages.map(m => `
+                <div class="message-bubble">
+                    <div class="message-meta">
+                        <span class="message-author">${m.author}</span>
+                        <span>${new Date(m.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div style="white-space: pre-wrap; line-height: 1.5;">${m.content || '<span style="font-style: italic; opacity: 0.5;">*Attachment or Embed*</span>'}</div>
+                </div>
+            `).join('');
+
+            modal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('viewer-modal').classList.remove('active');
+            if (chatPollInterval) clearInterval(chatPollInterval);
+            lastMessageTimestamp = 0;
+        }
+
+        // Console Logic
+        function setStyle(style) {
+            messageStyle = style;
+            document.getElementById('style-plain').classList.toggle('active', style === 'plain');
+            document.getElementById('style-embed').classList.toggle('active', style === 'embed');
+            document.getElementById('embed-fields').style.display = style === 'embed' ? 'block' : 'none';
+        }
+
+        function setDmStyle(style) {
+            dmStyle = style;
+            document.getElementById('dm-style-plain').classList.toggle('active', style === 'plain');
+            document.getElementById('dm-style-embed').classList.toggle('active', style === 'embed');
+            document.getElementById('dm-image-group').style.display = style === 'embed' ? 'block' : 'none';
+        }
+
+        async function sendToConsole() {
+            const input = document.getElementById('console-input');
+            const channel = document.getElementById('console-channel');
+            const title = document.getElementById('console-title');
+            const output = document.getElementById('terminal-output');
+
+            const content = input.value.trim();
+            if (!content) return;
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            logTerminal(`> Sending message to ${channel.value}...`, '#94a3b8');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/console/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({
+                        channelId: channel.value,
+                        content: content,
+                        isEmbed: messageStyle === 'embed',
+                        title: title.value
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    logTerminal(`[SUCCESS] Message delivered to channel ${channel.value}`, '#00ff88');
+                    input.value = '';
+                } else {
+                    logTerminal(`[ERROR] ${data.error}`, '#ff4d4d');
+                }
+            } catch (err) {
+                logTerminal(`[FATAL] Network error: ${err.message}`, '#ff4d4d');
+            }
+        }
+
+        function logTerminal(msg, color) {
+            const output = document.getElementById('terminal-output');
+            const div = document.createElement('div');
+            div.style.color = color || 'inherit';
+            div.style.marginBottom = '0.2rem';
+            div.innerText = msg;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Announcement Logic
+        function selectTemplate(el) {
+            document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('active'));
+            el.classList.add('active');
+            selectedTemplate = el.getAttribute('data-template');
+        }
+
+        async function publishAnnouncement() {
+            const channel = document.getElementById('announce-channel').value;
+            const title = document.getElementById('announce-title').value;
+            const content = document.getElementById('announce-content').value;
+            const imageUrl = document.getElementById('announce-image').value;
+
+            if (!channel || !content) {
+                alert('Please provide a channel ID and content.');
+                return;
+            }
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            const btn = document.querySelector('#announcements .button .inner');
+            const original = btn.innerHTML;
+
+            btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Publishing...';
+            lucide.createIcons();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/announce`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({
+                        channelId: channel,
+                        content: content,
+                        template: selectedTemplate,
+                        title: title,
+                        imageUrl: imageUrl
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Announcement published successfully!');
+                    document.getElementById('announce-title').value = '';
+                    document.getElementById('announce-content').value = '';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                alert('Network Error: ' + err.message);
+            } finally {
+                btn.innerHTML = original;
+                lucide.createIcons();
+            }
+        }
+
+        // Close modal on background click
+        window.onclick = (e) => {
+            if (e.target.id === 'viewer-modal') closeModal();
+        };
+
+        // Search logic
+        document.getElementById('transcript-search')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const filtered = currentTranscripts.filter(t =>
+                t.channel.toLowerCase().includes(q) ||
+                t.closedBy.toLowerCase().includes(q)
+            );
+            renderTranscripts(filtered);
+        });
+
+        async function sendDM() {
+            const userId = document.getElementById('dm-user-id').value;
+            const content = document.getElementById('dm-content').value;
+            const imageUrl = document.getElementById('dm-image-url').value;
+
+            if (!userId || !content) {
+                alert('Please provide a Discord ID and message content.');
+                return;
+            }
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            const btn = document.querySelector('#dm-manager .button .inner');
+            const original = btn.innerHTML;
+
+            btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Sending DM...';
+            lucide.createIcons();
+
+            console.log('[DEBUG] Sending DM with style:', dmStyle);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dm/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ 
+                        userId, 
+                        content, 
+                        isEmbed: dmStyle === 'embed',
+                        imageUrl: imageUrl 
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Direct Message sent successfully!');
+                    document.getElementById('dm-user-id').value = '';
+                    document.getElementById('dm-content').value = '';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                alert('Network Error: ' + err.message);
+            } finally {
+                btn.innerHTML = original;
+                lucide.createIcons();
+            }
+        }
+
+        async function loadAuditLogs() {
+            const list = document.getElementById('audit-log-list');
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/audit-logs`, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    list.innerHTML = '<div style="padding: 4rem; text-align: center; color: var(--text-muted);">No logs found.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(log => `
+                    <div style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(0, 242, 255, 0.05); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                <i data-lucide="${log.icon || 'activity'}"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.95rem;">${log.action}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">By ${log.user} • ${log.details}</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${new Date(log.timestamp).toLocaleString()}</div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } catch (err) {
+                list.innerHTML = '<div style="padding: 4rem; text-align: center; color: #ff4d4d;">Failed to load logs.</div>';
+            }
+        }
+    </script>
+</body>
+
+
+<!-- Mirrored from https://nvcore.shop/admin by HTTrack Website Copier/3.x [XR&CO], Tue, 22 Sep 2026 15:09:35 GMT -->
+</html>

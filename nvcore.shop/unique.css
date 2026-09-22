@@ -1,0 +1,285 @@
+/* 
+    UNIQUE DESIGN SYSTEM: DIGITAL FLUX 
+    Author: Antigravity AI
+*/
+
+:root {
+    --neon-cyan: #00f2ff;
+    --neon-blue: #0066ff;
+    --neon-purple: #bf00ff;
+    --dark-surface: #0a0b14;
+    --card-glow: rgba(0, 242, 255, 0.15);
+}
+
+/* Code Backdrop */
+.code-backdrop {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--neon-cyan);
+    white-space: pre;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Status Ticker */
+.status-ticker {
+    height: 35px;
+    background: rgba(10, 11, 16, 0.3);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 1001;
+    font-size: 0.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.ticker-content {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll 30s linear infinite;
+    padding-left: 100%;
+}
+
+.ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 3rem;
+    color: var(--text-muted);
+}
+
+.ticker-item i {
+    color: var(--neon-cyan);
+    width: 14px;
+    height: 14px;
+}
+
+.pulse {
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    animation: pulse-ring 1.5s infinite;
+}
+
+.pulse-gold {
+    width: 8px;
+    height: 8px;
+    background: #ffcc00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffcc00;
+    animation: pulse-ring 1.5s infinite;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+/* Enhanced Project Cards */
+.project-card {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(13, 14, 20, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent, 
+        transparent, 
+        transparent, 
+        var(--neon-cyan)
+    );
+    animation: rotate-border 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: -1;
+}
+
+.project-card:hover::before {
+    opacity: 0.3;
+}
+
+@keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Card Scan Effect */
+.project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 242, 255, 0.05),
+        transparent
+    );
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.project-card:hover::after {
+    left: 100%;
+    transition: 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium Badge on Cards */
+.project-card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(0, 242, 255, 0.1);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+/* Floating Elements (Background) */
+.floating-icon {
+    position: absolute;
+    color: var(--neon-cyan);
+    opacity: 0.05;
+    pointer-events: none;
+    animation: float-slow 10s infinite alternate ease-in-out;
+}
+
+@keyframes float-slow {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(30px, 30px) rotate(15deg); }
+}
+
+/* Team Card Polish */
+.team-member-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.team-member-card:hover {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1) !important;
+}
+
+.member-avatar {
+    position: relative;
+}
+
+.member-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border: 1px solid var(--neon-cyan);
+    border-radius: 50%;
+    opacity: 0;
+    transition: 0.3s;
+    transform: scale(0.8);
+}
+
+.team-member-card:hover .member-avatar::after {
+    opacity: 0.5;
+    transform: scale(1.05);
+}
+
+/* Price Tags */
+.project-price.paid {
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+/* Performance Promise Section */
+.promise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    padding: 5rem;
+    align-items: center;
+}
+
+.promise-features {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.promise-feature {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.promise-feature:hover {
+    background: rgba(0, 242, 255, 0.03);
+    border-color: rgba(0, 242, 255, 0.2);
+    transform: translateX(10px);
+}
+
+.p-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 242, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--neon-cyan);
+}
+
+.p-text h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    color: #fff;
+}
+
+.p-text p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 992px) {
+    .promise-grid {
+        grid-template-columns: 1fr;
+        padding: 3rem 2rem;
+    }
+}
