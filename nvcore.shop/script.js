@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Discord Authentication System (Implicit Grant)
-    const CLIENT_ID = '1498033833457483937'; // Real Discord Client ID
+    const CLIENT_ID = '1499411271521407026'; // Real Discord Client ID
     const REDIRECT_URI = encodeURIComponent(window.location.origin + '/callback.html');
     
     const getAuthUrls = () => {
