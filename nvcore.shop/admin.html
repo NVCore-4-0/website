@@ -996,6 +996,13 @@
         let lastMessageTimestamp = 0;
 
         // Auth Check
+        // WARNING: This is a client-side UI gate only, not real security. `session` comes
+        // straight from localStorage, which anyone can edit via devtools to set isStaff:true
+        // and see this dashboard's markup/JS. Do not trust this check to protect real data —
+        // every API call this page makes must independently verify the caller's Discord roles
+        // server-side (using the bot token, never exposed to the browser) before returning
+        // anything sensitive. Until that server-side check exists, treat all data rendered
+        // here as visible to anyone who can open devtools, regardless of this gate.
         document.addEventListener('DOMContentLoaded', async () => {
             await initConnectivity();
             const session = JSON.parse(localStorage.getItem('discord_user'));

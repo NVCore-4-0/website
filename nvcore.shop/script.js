@@ -1,6 +1,3 @@
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1498033833457483937/CcTK0Oxa9LHy8MIHuWgmWm1_7w0j-n6_';
-const MY_DISCORD_ID = '1498033833457483937';
-
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide Icons
     lucide.createIcons();
@@ -107,10 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            mobileToggle.querySelector('i').setAttribute('data-lucide', 
+            mobileToggle.querySelector('i').setAttribute('data-lucide',
                 navLinks.classList.contains('active') ? 'x' : 'menu'
             );
             lucide.createIcons();
+        });
+
+        mobileToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                mobileToggle.click();
+            }
         });
 
         // Close menu on link click
@@ -368,22 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    const logToDiscord = (message) => {
-        fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                content: `<@${MY_DISCORD_ID}>`,
-                embeds: [{
-                    title: 'NVCore Authentication Log',
-                    description: message,
-                    color: 5814783,
-                    timestamp: new Date().toISOString()
-                }]
-            })
-        }).catch(err => console.error('Error logging to Discord:', err));
-    };
-
     const showModal = () => {
         localStorage.removeItem('return_url');
         if (discordModal) discordModal.classList.add('active');
@@ -540,57 +528,377 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchDiscordStats();
 
-    // Unique: Hero Code Backdrop Generation
-    const codeBackdrop = document.getElementById('code-backdrop');
-    if (codeBackdrop) {
-        const codeSnippets = [
-            'function initializeScript() {',
-            '  const core = exports["nv-core"]:GetCore();',
-            '  if (core.isReady) {',
-            '    core.loadModule("optimization");',
-            '    console.log("NVCore Systems: ONLINE");',
-            '  }',
-            '}',
-            '-- Optimization Loop',
-            'Citizen.CreateThread(function()',
-            '  while true do',
-            '    Wait(0)',
-            '    if IsPedInAnyVehicle(player) then',
-            '      SetVehicleOptimized(veh, true)',
-            '    end',
-            '  end',
-            'end)',
-            'CREATE TABLE IF NOT EXISTS `nv_scripts` (',
-            '  `id` int(11) NOT NULL AUTO_INCREMENT,',
-            '  `name` varchar(50) DEFAULT NULL,',
-            '  PRIMARY KEY (`id`)',
-            ');'
-        ];
-
-        let content = '';
-        for (let i = 0; i < 50; i++) {
-            content += codeSnippets[Math.floor(Math.random() * codeSnippets.length)] + '\n';
+    // Cosmic Background: Starfield Generation (fills the viewport, static — no scroll motion)
+    const generateStars = (container, count, sizeRange, opacityRange) => {
+        if (!container) return;
+        let stars = '';
+        for (let i = 0; i < count; i++) {
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const size = (sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0])).toFixed(2);
+            const opacity = (opacityRange[0] + Math.random() * (opacityRange[1] - opacityRange[0])).toFixed(2);
+            const delay = (Math.random() * 6).toFixed(2);
+            const duration = (4 + Math.random() * 5).toFixed(2);
+            stars += `<span class="star" style="left:${x}%; top:${y}%; width:${size}px; height:${size}px; --max-opacity:${opacity}; animation-delay:${delay}s; animation-duration:${duration}s;"></span>`;
         }
-        codeBackdrop.textContent = content;
+        container.innerHTML = stars;
+    };
 
-        // Slow scroll effect
-        let scrollPos = 0;
-        setInterval(() => {
-            scrollPos += 0.2;
-            codeBackdrop.style.transform = `translateY(-${scrollPos % 500}px)`;
-        }, 30);
+    generateStars(document.getElementById('stars-deep'), 90, [0.4, 0.8], [0.08, 0.25]);
+    generateStars(document.getElementById('stars-far'), 70, [0.7, 1.4], [0.15, 0.45]);
+    generateStars(document.getElementById('stars-near'), 35, [1.3, 2.4], [0.35, 0.85]);
+
+    // Galaxy band: dense star cluster concentrated along the strip
+    const galaxyStarsEl = document.getElementById('galaxy-stars');
+    if (galaxyStarsEl) {
+        let stars = '';
+        for (let i = 0; i < 130; i++) {
+            const x = Math.random() * 100;
+            // Gaussian-ish clustering toward vertical center for a dense band look
+            const y = 50 + (Math.random() + Math.random() + Math.random() - 1.5) * 30;
+            const size = (Math.random() < 0.1 ? 1.8 : 1) * (0.6 + Math.random() * 0.8);
+            const opacity = (0.3 + Math.random() * 0.6).toFixed(2);
+            const delay = (Math.random() * 6).toFixed(2);
+            const duration = (3 + Math.random() * 5).toFixed(2);
+            stars += `<span class="star" style="left:${x}%; top:${y}%; width:${size.toFixed(2)}px; height:${size.toFixed(2)}px; --max-opacity:${opacity}; animation-delay:${delay}s; animation-duration:${duration}s;"></span>`;
+        }
+        galaxyStarsEl.innerHTML = stars;
     }
 
-    // Unique: Smooth Mouse Parallax for Blobs
-    document.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        
-        document.querySelectorAll('.background-blob').forEach((blob, index) => {
-            const speed = (index + 1) * 2;
-            blob.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+    // Hero: mouse-reactive floating text + zero-gravity drag
+    const heroSection = document.getElementById('home');
+    const heroContent = document.getElementById('hero-content');
+
+    if (heroSection && heroContent) {
+        let tiltX = 0, tiltY = 0; // parallax offset from cursor hover (not dragging)
+        let dragX = 0, dragY = 0; // persistent offset from dragging/drifting
+        let isDragging = false;
+        let dragStartX = 0, dragStartY = 0;
+        let dragOriginX = 0, dragOriginY = 0;
+        let velX = 0, velY = 0;
+        let lastPointerX = 0, lastPointerY = 0;
+        let lastPointerTime = 0;
+        let driftFrame = null;
+
+        const applyTransform = () => {
+            heroContent.style.transform = `translate(${tiltX + dragX}px, ${tiltY + dragY}px)`;
+        };
+
+        const stopDrift = () => {
+            if (driftFrame) cancelAnimationFrame(driftFrame);
+            driftFrame = null;
+        };
+
+        const startDrift = () => {
+            stopDrift();
+            heroContent.classList.add('drifting');
+            const friction = 0.96;
+            const springBack = 0.02;
+            const step = () => {
+                // Weightless deceleration
+                velX *= friction;
+                velY *= friction;
+                // Gentle pull back toward resting position (0,0)
+                velX += -dragX * springBack;
+                velY += -dragY * springBack;
+
+                dragX += velX;
+                dragY += velY;
+                applyTransform();
+
+                if (Math.abs(velX) > 0.03 || Math.abs(velY) > 0.03 || Math.abs(dragX) > 0.5 || Math.abs(dragY) > 0.5) {
+                    driftFrame = requestAnimationFrame(step);
+                } else {
+                    dragX = 0;
+                    dragY = 0;
+                    applyTransform();
+                    driftFrame = null;
+                    heroContent.classList.remove('drifting');
+                }
+            };
+            driftFrame = requestAnimationFrame(step);
+        };
+
+        heroContent.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            stopDrift();
+            heroContent.classList.remove('drifting');
+            heroContent.classList.add('dragging');
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            dragOriginX = dragX;
+            dragOriginY = dragY;
+            lastPointerX = e.clientX;
+            lastPointerY = e.clientY;
+            lastPointerTime = performance.now();
+            velX = 0;
+            velY = 0;
+            e.preventDefault();
         });
-    });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const now = performance.now();
+            const dt = Math.max(now - lastPointerTime, 1);
+            velX = ((e.clientX - lastPointerX) / dt) * 16; // px per frame (~60fps)
+            velY = ((e.clientY - lastPointerY) / dt) * 16;
+            lastPointerX = e.clientX;
+            lastPointerY = e.clientY;
+            lastPointerTime = now;
+
+            dragX = dragOriginX + (e.clientX - dragStartX);
+            dragY = dragOriginY + (e.clientY - dragStartY);
+            applyTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            heroContent.classList.remove('dragging');
+            startDrift();
+        });
+
+        heroSection.addEventListener('mousemove', (e) => {
+            if (isDragging) return;
+            const rect = heroSection.getBoundingClientRect();
+            const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+            const relY = (e.clientY - rect.top) / rect.height - 0.5;
+            tiltX = relX * -14;
+            tiltY = relY * -10;
+            applyTransform();
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            if (isDragging) return;
+            tiltX = 0;
+            tiltY = 0;
+            applyTransform();
+        });
+    }
+
+    // Astronaut: roams the whole page (fixed), reacts to cursor proximity, and can be thrown
+    const astronaut = document.getElementById('astronaut');
+    const astronautTilt = astronaut ? astronaut.querySelector('.astronaut-tilt') : null;
+
+    if (astronaut && astronautTilt && window.matchMedia('(min-width: 769px)').matches) {
+        // Single source of truth for the astronaut's screen position (px from top-left)
+        let posX = window.innerWidth * 0.78;
+        let posY = window.innerHeight * 0.2;
+        let wanderTargetX = posX;
+        let wanderTargetY = posY;
+        let wanderTimer = null;
+
+        let isThrowDragging = false;
+        let grabOffsetX = 0, grabOffsetY = 0;
+        let throwVelX = 0, throwVelY = 0;
+        let lastGrabX = 0, lastGrabY = 0;
+        let lastGrabTime = 0;
+        let inMomentum = false;
+
+        // Cursor-proximity nudge (eased, not snapped)
+        let pushX = 0, pushY = 0, pushRot = 0;
+        let targetPushX = 0, targetPushY = 0, targetPushRot = 0;
+
+        // Direction-of-travel bank/tilt
+        let prevPosX = posX;
+        let prevPosY = posY;
+        let bankRot = 0;
+        let bobPhase = Math.random() * Math.PI * 2;
+
+        const friction = 0.985;
+
+        // Single render loop: position (JS-driven) + idle bob + bank + cursor nudge, all composed once
+        const renderLoop = () => {
+            bobPhase += 0.02;
+            const idleBobY = Math.sin(bobPhase) * 5;
+            const idleBobX = Math.sin(bobPhase * 0.5) * 3;
+            // Small fast wobble + slow lazy tumble, like drifting in zero-G
+            const idleBobRot = Math.sin(bobPhase * 0.7) * 4 + Math.sin(bobPhase * 0.13) * 14;
+
+            const dx = posX - prevPosX;
+            const dy = posY - prevPosY;
+            prevPosX = posX;
+            prevPosY = posY;
+            const speed = Math.sqrt(dx * dx + dy * dy);
+            const targetBank = speed > 0.05 ? Math.max(-30, Math.min(30, dx * 3)) : 0;
+            bankRot += (targetBank - bankRot) * 0.08;
+
+            pushX += (targetPushX - pushX) * 0.15;
+            pushY += (targetPushY - pushY) * 0.15;
+            pushRot += (targetPushRot - pushRot) * 0.15;
+
+            astronaut.style.transform = `translate(${posX}px, ${posY}px)`;
+            astronautTilt.style.transform =
+                `translate(${(idleBobX + pushX).toFixed(2)}px, ${(idleBobY + pushY).toFixed(2)}px) rotate(${(idleBobRot + bankRot + pushRot).toFixed(2)}deg)`;
+            // Limbs counter-rotate against the bank so they trail behind the motion
+            astronautTilt.style.setProperty('--trail', `${(-bankRot * 0.9).toFixed(2)}deg`);
+
+            requestAnimationFrame(renderLoop);
+        };
+        requestAnimationFrame(renderLoop);
+
+        const stopMomentum = () => { inMomentum = false; };
+
+        // Idle wander: glide toward a new random point every few seconds
+        const pickWanderTarget = () => {
+            wanderTargetX = window.innerWidth * (0.08 + Math.random() * 0.82);
+            wanderTargetY = window.innerHeight * (0.1 + Math.random() * 0.65);
+        };
+
+        const startWandering = () => {
+            clearInterval(wanderTimer);
+            pickWanderTarget();
+            wanderTimer = setInterval(pickWanderTarget, 6000);
+        };
+
+        const wanderStep = () => {
+            if (!isThrowDragging && !inMomentum) {
+                posX += (wanderTargetX - posX) * 0.008;
+                posY += (wanderTargetY - posY) * 0.008;
+            }
+            requestAnimationFrame(wanderStep);
+        };
+        startWandering();
+        requestAnimationFrame(wanderStep);
+
+        // Throw physics: after release, keep momentum and bounce softly off screen edges
+        const startThrowMomentum = () => {
+            inMomentum = true;
+            const margin = 10;
+
+            const step = () => {
+                if (!inMomentum) return;
+                const maxX = window.innerWidth - astronaut.offsetWidth - margin;
+                const maxY = window.innerHeight - astronaut.offsetHeight - margin;
+
+                throwVelX *= friction;
+                throwVelY *= friction;
+
+                posX += throwVelX;
+                posY += throwVelY;
+
+                if (posX < margin) { posX = margin; throwVelX *= -0.4; }
+                if (posX > maxX) { posX = maxX; throwVelX *= -0.4; }
+                if (posY < margin) { posY = margin; throwVelY *= -0.4; }
+                if (posY > maxY) { posY = maxY; throwVelY *= -0.4; }
+
+                if (Math.abs(throwVelX) > 0.05 || Math.abs(throwVelY) > 0.05) {
+                    requestAnimationFrame(step);
+                } else {
+                    inMomentum = false;
+                    wanderTargetX = posX;
+                    wanderTargetY = posY;
+                    startWandering(); // resume idle wandering from here
+                }
+            };
+            requestAnimationFrame(step);
+        };
+
+        let mouseDownX = 0, mouseDownY = 0, mouseDownTime = 0;
+
+        astronaut.addEventListener('mousedown', (e) => {
+            isThrowDragging = true;
+            stopMomentum();
+            clearInterval(wanderTimer);
+            astronaut.classList.add('grabbed');
+            grabOffsetX = e.clientX - posX;
+            grabOffsetY = e.clientY - posY;
+            lastGrabX = e.clientX;
+            lastGrabY = e.clientY;
+            lastGrabTime = performance.now();
+            mouseDownX = e.clientX;
+            mouseDownY = e.clientY;
+            mouseDownTime = performance.now();
+            throwVelX = 0;
+            throwVelY = 0;
+            e.preventDefault();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isThrowDragging) {
+                const now = performance.now();
+                const dt = Math.max(now - lastGrabTime, 1);
+                throwVelX = ((e.clientX - lastGrabX) / dt) * 16;
+                throwVelY = ((e.clientY - lastGrabY) / dt) * 16;
+                lastGrabX = e.clientX;
+                lastGrabY = e.clientY;
+                lastGrabTime = now;
+
+                posX = e.clientX - grabOffsetX;
+                posY = e.clientY - grabOffsetY;
+                return;
+            }
+
+            const astroRect = astronaut.getBoundingClientRect();
+            const astroCenterX = astroRect.left + astroRect.width / 2;
+            const astroCenterY = astroRect.top + astroRect.height / 2;
+            const dx = e.clientX - astroCenterX;
+            const dy = e.clientY - astroCenterY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const proximity = Math.max(0, 1 - dist / 220); // 0 far, 1 very close
+
+            if (proximity > 0.02) {
+                targetPushX = -(dx / (dist || 1)) * proximity * 30;
+                targetPushY = -(dy / (dist || 1)) * proximity * 30;
+                targetPushRot = (dx / (dist || 1)) * proximity * 25;
+                astronaut.classList.add('thrusting');
+            } else {
+                targetPushX = 0;
+                targetPushY = 0;
+                targetPushRot = 0;
+                astronaut.classList.remove('thrusting');
+            }
+        }, { passive: false });
+
+        // Give Oxygen: a click (not a throw) on the astronaut, only meaningful when logged in
+        const giveOxygen = () => {
+            const userSession = JSON.parse(localStorage.getItem('discord_user') || 'null');
+            const authed = userSession ? userSession.authenticated : false;
+
+            if (!authed) {
+                if (typeof showModal === 'function') showModal();
+                return;
+            }
+
+            astronaut.classList.remove('oxygen-given');
+            // Force reflow so the animation can retrigger on repeated clicks
+            void astronaut.offsetWidth;
+            astronaut.classList.add('oxygen-given');
+
+            const bubble = document.createElement('div');
+            bubble.className = 'oxygen-bubble';
+            bubble.textContent = 'O₂ +1';
+            astronaut.appendChild(bubble);
+            bubble.addEventListener('animationend', () => bubble.remove());
+
+            const toast = document.createElement('div');
+            toast.className = 'oxygen-toast';
+            toast.textContent = 'Oxygen delivered! Thanks for keeping him alive out there.';
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('visible'));
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => toast.remove(), 400);
+            }, 2600);
+        };
+
+        window.addEventListener('mouseup', (e) => {
+            if (!isThrowDragging) return;
+            isThrowDragging = false;
+            astronaut.classList.remove('grabbed');
+
+            const movedDist = Math.hypot(e.clientX - mouseDownX, e.clientY - mouseDownY);
+            const heldTime = performance.now() - mouseDownTime;
+            const wasClick = movedDist < 6 && heldTime < 350;
+
+            if (wasClick) {
+                giveOxygen();
+            } else {
+                startThrowMomentum();
+            }
+        });
+    }
+
 });
 
 

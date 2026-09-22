@@ -4,27 +4,107 @@
 */
 
 :root {
-    --neon-cyan: #e4e4e7;
-    --neon-blue: #9a9aa3;
-    --neon-purple: #ffffff;
+    --accent-light: #e4e4e7;
+    --accent-muted: #9a9aa3;
+    --accent-bright: #ffffff;
     --dark-surface: #0a0a0c;
     --card-glow: rgba(255, 255, 255, 0.12);
 }
 
-/* Code Backdrop */
-.code-backdrop {
+/* Cosmic Background: full-page fixed starfield, nebulae, galaxy band */
+.cosmic-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    background: var(--bg-dark);
+    pointer-events: none;
+}
+
+.cosmic-layer {
     position: absolute;
     inset: 0;
-    opacity: 0.03;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--neon-cyan);
-    white-space: pre;
-    overflow: hidden;
-    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
-    user-select: none;
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: #ffffff;
+    opacity: var(--max-opacity, 0.5);
+    animation: star-twinkle ease-in-out infinite;
+}
+
+@keyframes star-twinkle {
+    0%, 100% { opacity: calc(var(--max-opacity, 0.5) * 0.3); transform: scale(0.85); }
+    50% { opacity: var(--max-opacity, 0.5); transform: scale(1.1); }
+}
+
+.cosmic-nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
     pointer-events: none;
+    will-change: transform;
+}
+
+.nebula-1 {
+    width: 700px;
+    height: 550px;
+    top: 8%;
+    left: -12%;
+    background: radial-gradient(circle, rgba(154, 154, 163, 0.07) 0%, transparent 70%);
+}
+
+.nebula-2 {
+    width: 620px;
+    height: 620px;
+    bottom: 6%;
+    right: -14%;
+    background: radial-gradient(circle, rgba(228, 228, 231, 0.05) 0%, transparent 70%);
+}
+
+/* Milky Way galaxy band */
+.galaxy-band {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1000px;
+    height: 300px;
+    transform: translate(-50%, -50%) rotate(-22deg);
+    will-change: transform;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 78%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 78%, transparent 100%);
+}
+
+.galaxy-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 100% 45% at 50% 50%, rgba(228, 228, 231, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 70% 30% at 35% 45%, rgba(255, 255, 255, 0.04) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 28% at 65% 55%, rgba(154, 154, 163, 0.05) 0%, transparent 65%);
+    filter: blur(18px);
+}
+
+.galaxy-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 220px;
+    height: 140px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.4) 0%, rgba(228, 228, 231, 0.15) 45%, transparent 75%);
+    filter: blur(12px);
+}
+
+.galaxy-stars {
+    position: absolute;
+    inset: 0;
+}
+
+.galaxy-stars .star {
+    background: #ffffff;
 }
 
 /* Status Ticker */
@@ -60,7 +140,7 @@
 }
 
 .ticker-item i {
-    color: var(--neon-cyan);
+    color: var(--accent-light);
     width: 14px;
     height: 14px;
 }
@@ -113,7 +193,7 @@
         transparent, 
         transparent, 
         transparent, 
-        var(--neon-cyan)
+        var(--accent-light)
     );
     animation: rotate-border 4s linear infinite;
     opacity: 0;
@@ -160,11 +240,11 @@
     right: 1rem;
     padding: 0.3rem 0.8rem;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--neon-cyan);
+    border: 1px solid var(--accent-light);
     border-radius: 100px;
     font-size: 0.65rem;
     font-weight: 800;
-    color: var(--neon-cyan);
+    color: var(--accent-light);
     text-transform: uppercase;
     z-index: 10;
 }
@@ -172,7 +252,7 @@
 /* Floating Elements (Background) */
 .floating-icon {
     position: absolute;
-    color: var(--neon-cyan);
+    color: var(--accent-light);
     opacity: 0.05;
     pointer-events: none;
     animation: float-slow 10s infinite alternate ease-in-out;
@@ -190,7 +270,7 @@
 }
 
 .team-member-card:hover {
-    border-color: var(--neon-cyan) !important;
+    border-color: var(--accent-light) !important;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -202,7 +282,7 @@
     content: '';
     position: absolute;
     inset: -5px;
-    border: 1px solid var(--neon-cyan);
+    border: 1px solid var(--accent-light);
     border-radius: 50%;
     opacity: 0;
     transition: 0.3s;
@@ -263,7 +343,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--neon-cyan);
+    color: var(--accent-light);
 }
 
 .p-text h4 {

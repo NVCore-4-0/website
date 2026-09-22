@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signing in... | NVCORE.SHOP</title>
+    <link rel="shortcut icon" href="assets/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .callback-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .callback-box {
+            padding: 3rem;
+            max-width: 420px;
+        }
+
+        .callback-box img {
+            width: 64px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 12px var(--primary-glow));
+        }
+
+        .callback-box h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .callback-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="callback-wrapper">
+        <div class="callback-box glass">
+            <img src="assets/logo.png" alt="NVCore">
+            <h1 id="callback-title"><i data-lucide="loader-2" class="spin"></i> Signing you in...</h1>
+            <p id="callback-message">Please wait while we verify your Discord account.</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        (function () {
+            const titleEl = document.getElementById('callback-title');
+            const messageEl = document.getElementById('callback-message');
+
+            const fail = (msg) => {
+                titleEl.innerHTML = 'Sign in failed';
+                messageEl.textContent = msg;
+                setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+            };
+
+            const params = new URLSearchParams(window.location.hash.slice(1));
+            const accessToken = params.get('access_token');
+            const tokenType = params.get('token_type') || 'Bearer';
+            const state = params.get('state');
+            const error = params.get('error');
+
+            if (error) {
+                fail('Discord authorization was denied or cancelled.');
+                return;
+            }
+
+            if (!accessToken) {
+                fail('No access token was returned by Discord.');
+                return;
+            }
+
+            fetch('https://discord.com/api/users/@me', {
+                headers: { Authorization: `${tokenType} ${accessToken}` }
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error('Failed to fetch Discord profile');
+                    return res.json();
+                })
+                .then((user) => {
+                    const session = {
+                        authenticated: true,
+                        id: user.id,
+                        username: user.global_name || user.username,
+                        avatar: user.avatar,
+                        isStaff: false
+                    };
+                    localStorage.setItem('discord_user', JSON.stringify(session));
+
+                    let returnUrl = 'index.html';
+                    if (state && state !== 'none') {
+                        try {
+                            returnUrl = decodeURIComponent(state);
+                        } catch (e) {
+                            returnUrl = 'index.html';
+                        }
+                    }
+                    localStorage.removeItem('return_url');
+                    window.location.href = returnUrl || 'index.html';
+                })
+                .catch(() => {
+                    fail('Could not verify your Discord account. Please try again.');
+                });
+        })();
+    </script>
+</body>
+
+</html>

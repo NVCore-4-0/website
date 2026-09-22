@@ -27,12 +27,117 @@
 
 <body>
 
+    <!-- Cosmic Background (fixed, spans full page) -->
+    <div class="cosmic-bg" aria-hidden="true">
+        <div class="cosmic-layer cosmic-stars-deep" id="stars-deep"></div>
+        <div class="cosmic-layer cosmic-stars-far" id="stars-far"></div>
+        <div class="cosmic-layer cosmic-stars-near" id="stars-near"></div>
+        <div class="cosmic-nebula nebula-1"></div>
+        <div class="cosmic-nebula nebula-2"></div>
+        <div class="galaxy-band">
+            <div class="galaxy-core"></div>
+            <div class="galaxy-stars" id="galaxy-stars"></div>
+        </div>
+    </div>
 
+    <!-- Floating Astronaut (fixed, roams the whole page) -->
+    <div class="astronaut" id="astronaut" aria-hidden="true">
+        <div class="astronaut-drift-layer">
+            <div class="astronaut-tilt">
+                <svg class="astro-svg" viewBox="0 0 60 80" width="56" height="76">
+                    <defs>
+                        <linearGradient id="astroSuit" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#ffffff" />
+                            <stop offset="0.55" stop-color="#d6d6da" />
+                            <stop offset="1" stop-color="#9a9aa1" />
+                        </linearGradient>
+                        <radialGradient id="astroHelmet" cx="0.35" cy="0.3" r="0.8">
+                            <stop offset="0" stop-color="#ffffff" />
+                            <stop offset="0.6" stop-color="#d9d9dd" />
+                            <stop offset="1" stop-color="#8c8c93" />
+                        </radialGradient>
+                        <linearGradient id="astroVisor" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#46464d" />
+                            <stop offset="0.5" stop-color="#121215" />
+                            <stop offset="1" stop-color="#000000" />
+                        </linearGradient>
+                        <linearGradient id="astroFlame" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#ffffff" stop-opacity="0.95" />
+                            <stop offset="0.5" stop-color="#d4d4d8" stop-opacity="0.5" />
+                            <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Backpack + thrusters -->
+                    <rect x="14" y="27" width="32" height="25" rx="5" fill="#7a7a81" />
+                    <ellipse class="astro-flame" cx="16" cy="59" rx="2.4" ry="5" fill="url(#astroFlame)" />
+                    <ellipse class="astro-flame" cx="44" cy="59" rx="2.4" ry="5" fill="url(#astroFlame)" />
+                    <rect x="14.5" y="51" width="3" height="4" rx="1" fill="#55555c" />
+                    <rect x="42.5" y="51" width="3" height="4" rx="1" fill="#55555c" />
+
+                    <!-- Left leg -->
+                    <g class="limb leg-l"><g class="sway sway-leg-l">
+                        <path class="seg-o" d="M26 50 L20 60" /><path class="seg" d="M26 50 L20 60" />
+                        <g class="sway sway-shin-l">
+                            <path class="seg-o" d="M20 60 L23 70" /><path class="seg" d="M20 60 L23 70" />
+                            <ellipse cx="23.5" cy="71.5" rx="4.6" ry="3" fill="#8c8c93" stroke="#55555c" stroke-width="0.8" />
+                        </g>
+                    </g></g>
+
+                    <!-- Right leg -->
+                    <g class="limb leg-r"><g class="sway sway-leg-r">
+                        <path class="seg-o" d="M34 50 L40 59" /><path class="seg" d="M34 50 L40 59" />
+                        <g class="sway sway-shin-r">
+                            <path class="seg-o" d="M40 59 L38 69" /><path class="seg" d="M40 59 L38 69" />
+                            <ellipse cx="37.5" cy="70.5" rx="4.6" ry="3" fill="#8c8c93" stroke="#55555c" stroke-width="0.8" />
+                        </g>
+                    </g></g>
+
+                    <!-- Torso -->
+                    <rect x="19" y="28" width="22" height="24" rx="8" fill="url(#astroSuit)" stroke="#55555c" stroke-width="0.8" />
+                    <rect x="25" y="35" width="10" height="7" rx="1.5" fill="#b4b4ba" />
+                    <circle cx="27.5" cy="38.5" r="1" fill="#ffffff" />
+                    <circle cx="30" cy="38.5" r="1" fill="#6f6f76" />
+                    <circle cx="32.5" cy="38.5" r="1" fill="#ffffff" />
+                    <rect x="19.5" y="46.5" width="21" height="3" rx="1.2" fill="#a6a6ac" />
+
+                    <!-- Left arm -->
+                    <g class="limb arm-l"><g class="sway sway-arm-l">
+                        <path class="seg-o" d="M21 32 L11 38" /><path class="seg" d="M21 32 L11 38" />
+                        <g class="sway sway-fore-l">
+                            <path class="seg-o" d="M11 38 L7 29" /><path class="seg" d="M11 38 L7 29" />
+                            <circle cx="6.8" cy="28" r="3.6" fill="#c2c2c8" stroke="#55555c" stroke-width="0.8" />
+                        </g>
+                    </g></g>
+
+                    <!-- Right arm -->
+                    <g class="limb arm-r"><g class="sway sway-arm-r">
+                        <path class="seg-o" d="M39 32 L49 36" /><path class="seg" d="M39 32 L49 36" />
+                        <g class="sway sway-fore-r">
+                            <path class="seg-o" d="M49 36 L53 45" /><path class="seg" d="M49 36 L53 45" />
+                            <circle cx="53.5" cy="46.2" r="3.6" fill="#c2c2c8" stroke="#55555c" stroke-width="0.8" />
+                        </g>
+                    </g></g>
+
+                    <!-- Neck ring + helmet -->
+                    <rect x="22" y="28.5" width="16" height="3" rx="1.5" fill="#a8a8ae" />
+                    <g class="sway sway-head">
+                        <rect x="15.5" y="14" width="3" height="8" rx="1.5" fill="#a0a0a6" />
+                        <rect x="41.5" y="14" width="3" height="8" rx="1.5" fill="#a0a0a6" />
+                        <circle cx="30" cy="18" r="13" fill="url(#astroHelmet)" stroke="#55555c" stroke-width="0.8" />
+                        <ellipse cx="31" cy="19" rx="9" ry="7.2" fill="url(#astroVisor)" />
+                        <ellipse cx="27.5" cy="16" rx="3" ry="1.5" fill="#ffffff" opacity="0.55" transform="rotate(-25 27.5 16)" />
+                        <circle class="astro-lamp" cx="21" cy="8.5" r="1.3" fill="#ffffff" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
 
     <!-- Loading Screen -->
     <div id="loader" class="loader-wrapper">
         <div class="loader-content">
-            <img src="assets/logo.png" alt="NVCore" class="loader-logo">
+            <span class="loader-logo-mark"><img src="assets/logo.png" alt="NVCore" class="loader-logo"></span>
             <span class="loader-text"></span>
         </div>
     </div>
@@ -41,8 +146,8 @@
     <nav id="navbar" class="navbar">
         <div class="container">
             <a class='logo' href='index.html'>
-                <img src="assets/logo.png" alt="NVCore Logo" class="nav-logo-img">
-                NVCORE<span class="dot">.</span>SHOP
+                <span class="logo-mark"><img src="assets/logo.png" alt="NVCore Logo" class="nav-logo-img"></span>
+                <span class="logo-text"><span class="brand-name">NVCORE</span><span class="dot">.</span><span class="brand-suffix">SHOP</span></span>
             </a>
             <ul class="nav-links">
                 <li><a href='index.html#home'>Home</a></li>
@@ -88,7 +193,7 @@
                     </a>
                 </li>
             </ul>
-            <div class="mobile-toggle" id="mobile-toggle">
+            <div class="mobile-toggle" id="mobile-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu">
                 <i data-lucide="menu"></i>
             </div>
         </div>
@@ -97,26 +202,18 @@
     <main>
         <!-- Hero Section -->
         <section id="home" class="hero">
-            <div class="hero-bg">
-                <div class="code-backdrop" id="code-backdrop"></div>
-                <div class="blob-wrapper">
-                    <div class="background-blob blob-1"></div>
-                    <div class="background-blob blob-2"></div>
-                    <div class="background-blob blob-3"></div>
-                </div>
-            </div>
             <div class="container">
-                <div class="hero-content">
-                    <div class="badge" data-reveal="fade-down">Official Store</div>
-                    <h1 class="hero-title" data-reveal="fade-up" data-delay="100">NVCORE</h1>
-                    <h2 class="hero-subtitle" data-reveal="fade-up" data-delay="200">The Ultimate <span
+                <div class="hero-content" id="hero-content">
+                    <div class="badge hero-float" data-reveal="fade-down" style="--float-delay: 0s;">Official Store</div>
+                    <h1 class="hero-title hero-float" data-reveal="fade-up" data-delay="100" style="--float-delay: 0.4s;">NVCORE</h1>
+                    <h2 class="hero-subtitle hero-float" data-reveal="fade-up" data-delay="200" style="--float-delay: 0.8s;">The Ultimate <span
                             data-text="FiveM">FiveM</span> Solutions</h2>
-                    <p class="hero-description" data-reveal="fade-up" data-delay="300">High-performance scripts,
+                    <p class="hero-description hero-float" data-reveal="fade-up" data-delay="300" style="--float-delay: 1.2s;">High-performance scripts,
                         seamless UI, and expert server optimization by
                         the official NVCore development team.
                     </p>
-                    <div class="hero-actions" data-reveal="fade-up" data-delay="400">
-                        <a href="#projects" class="button button-magnetic">
+                    <div class="hero-actions hero-float" data-reveal="fade-up" data-delay="400" style="--float-delay: 1.6s;">
+                        <a href="#projects" class="button button-primary button-magnetic">
                             <div class="inner">Visit Store</div>
                         </a>
                         <a href="https://discord.gg/Cr6zAJD2vV" target="_blank" class="button button-magnetic">
@@ -227,7 +324,7 @@
                     </div>
                     <div class="preview-card glass" data-reveal="fade-up" data-delay="200">
                         <div class="preview-img">
-                            <img src="https://cdn.discordapp.com/attachments/1491420902531793027/1497966645279330374/4f42bca7-d31b-4c94-b006-6697d41271eb.jpg" alt="UI Showcase">
+                            <img src="https://cdn.discordapp.com/attachments/1491420902531793027/1497966645279330374/4f42bca7-d31b-4c94-b006-6697d41271eb.jpg" alt="UI Showcase" loading="lazy">
                         </div>
                         <div class="preview-info">
                             <h3>UI Showcase</h3>
@@ -271,10 +368,10 @@
                         <!-- nv-Spawneffect (ESCROW) -->
                         <div class="project-card glass" data-reveal="fade-up">
                             <div class="project-img">
-                                <img src="assets/logo.png" alt="" class="hover-img"
+                                <img src="assets/logo.png" alt="" class="hover-img" loading="lazy"
                                     style="opacity: 0.1; object-fit: contain; padding: 2rem;">
                                 <div class="placeholder-img">
-                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo">
+                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo" loading="lazy">
                                 </div>
                             </div>
                             <div class="project-content">
@@ -307,10 +404,10 @@
                         <!-- NV-FPS Booster (ESCROW) -->
                         <div class="project-card glass" data-reveal="fade-up" data-delay="200">
                             <div class="project-img">
-                                <img src="assets/logo.png" alt="" class="hover-img"
+                                <img src="assets/logo.png" alt="" class="hover-img" loading="lazy"
                                     style="opacity: 0.1; object-fit: contain; padding: 2rem;">
                                 <div class="placeholder-img">
-                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo">
+                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo" loading="lazy">
                                 </div>
                             </div>
                             <div class="project-content">
@@ -350,10 +447,10 @@
                         <!-- nv-spawneffect (Open Source) -->
                         <div class="project-card glass" data-reveal="fade-up">
                             <div class="project-img">
-                                <img src="assets/logo.png" alt="" class="hover-img"
+                                <img src="assets/logo.png" alt="" class="hover-img" loading="lazy"
                                     style="opacity: 0.1; object-fit: contain; padding: 2rem;">
                                 <div class="placeholder-img">
-                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo">
+                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo" loading="lazy">
                                 </div>
                             </div>
                             <div class="project-content">
@@ -410,7 +507,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/discord-avatar-night__77.png" alt="Night">
+                                <img src="assets/discord-avatar-night__77.png" alt="Night" loading="lazy">
                             </div>
                             <h4>Night</h4>
                             <p>Owner & Founder</p>
@@ -418,7 +515,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="100">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/neo.png" alt="Neo">
+                                <img src="assets/neo.png" alt="Neo" loading="lazy">
                             </div>
                             <h4>Neo</h4>
                             <p>Owner & Founder</p>
@@ -426,7 +523,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="200">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/dark.png" alt="Dark">
+                                <img src="assets/dark.png" alt="Dark" loading="lazy">
                             </div>
                             <h4>Dark</h4>
                             <p>Founder & Vehicle Developer</p>
@@ -434,7 +531,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="300">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/syno.png" alt="Syno">
+                                <img src="assets/syno.png" alt="Syno" loading="lazy">
                             </div>
                             <h4>Syno</h4>
                             <p>Lead Developer</p>
@@ -450,7 +547,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="400">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/masterx.png" alt="MasterX">
+                                <img src="assets/masterx.png" alt="MasterX" loading="lazy">
                             </div>
                             <h4>MasterX</h4>
                             <p>UI Designer</p>
@@ -458,7 +555,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="500">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/nitish.png" alt="Nitish">
+                                <img src="assets/nitish.png" alt="Nitish" loading="lazy">
                             </div>
                             <h4>Nitish</h4>
                             <p>UI Developer</p>
@@ -646,7 +743,7 @@
                             <div class="discord-card-body">
                                 <div class="community-status">
                                     <div class="status-icon">
-                                        <img src="assets/logo.png" alt="NVCore">
+                                        <img src="assets/logo.png" alt="NVCore" loading="lazy">
                                     </div>
                                     <div class="status-info">
                                         <h4>NVCore Official</h4>
@@ -715,7 +812,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo"><img src="assets/logo.png" alt="NVCore Logo" class="footer-logo-img"> NVCORE<span>.</span>SHOP</div>
+                <div class="footer-logo"><span class="footer-logo-mark"><img src="assets/logo.png" alt="NVCore Logo" class="footer-logo-img" loading="lazy"></span> NVCORE<span>.</span>SHOP</div>
                 <p>&copy; 2024 NVCore Development Team. All rights reserved.</p>
                 <div class="footer-links"
                     style="margin: 1rem 0; display: flex; gap: 2rem; justify-content: center; font-size: 0.9rem; color: var(--text-muted);">
