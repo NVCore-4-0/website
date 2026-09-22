@@ -1,14 +1,14 @@
-/* 
+﻿/* 
     UNIQUE DESIGN SYSTEM: DIGITAL FLUX 
     Author: Antigravity AI
 */
 
 :root {
-    --neon-cyan: #00f2ff;
-    --neon-blue: #0066ff;
-    --neon-purple: #bf00ff;
-    --dark-surface: #0a0b14;
-    --card-glow: rgba(0, 242, 255, 0.15);
+    --neon-cyan: #e4e4e7;
+    --neon-blue: #9a9aa3;
+    --neon-purple: #ffffff;
+    --dark-surface: #0a0a0c;
+    --card-glow: rgba(255, 255, 255, 0.12);
 }
 
 /* Code Backdrop */
@@ -141,7 +141,7 @@
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(0, 242, 255, 0.05),
+        rgba(255, 255, 255, 0.05),
         transparent
     );
     transition: 0.5s;
@@ -159,7 +159,7 @@
     top: 1rem;
     right: 1rem;
     padding: 0.3rem 0.8rem;
-    background: rgba(0, 242, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     border: 1px solid var(--neon-cyan);
     border-radius: 100px;
     font-size: 0.65rem;
@@ -191,7 +191,7 @@
 
 .team-member-card:hover {
     border-color: var(--neon-cyan) !important;
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1) !important;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1) !important;
 }
 
 .member-avatar {
@@ -250,15 +250,15 @@
 }
 
 .promise-feature:hover {
-    background: rgba(0, 242, 255, 0.03);
-    border-color: rgba(0, 242, 255, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateX(10px);
 }
 
 .p-icon {
     width: 50px;
     height: 50px;
-    background: rgba(0, 242, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     display: flex;
     align-items: center;
