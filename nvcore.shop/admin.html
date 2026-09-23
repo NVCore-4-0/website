@@ -589,10 +589,76 @@
             max-width: 400px;
             padding: 2rem;
         }
+
+        /* Admin toast notifications (replaces native alert()) */
+        #admin-toast-stack {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            min-width: 280px;
+            max-width: 360px;
+            padding: 0.9rem 1.1rem;
+            border-radius: 14px;
+            background: rgba(16, 16, 19, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: auto;
+        }
+
+        .admin-toast.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .admin-toast .toast-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 0.1rem;
+        }
+
+        .admin-toast.success .toast-icon { color: #4ade80; }
+        .admin-toast.error .toast-icon { color: #f87171; }
+        .admin-toast.info .toast-icon { color: var(--primary); }
+
+        .admin-toast .toast-close {
+            margin-left: auto;
+            flex-shrink: 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        .admin-toast .toast-close:hover {
+            color: var(--text-main);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Toast Notifications -->
+    <div id="admin-toast-stack"></div>
+
     <!-- Auth Lock Screen -->
     <div id="auth-lock">
         <div class="lock-content">
@@ -967,6 +1033,34 @@
     </div>
 
     <script>
+        // Toast notifications — replaces native alert() with an in-app, dismissible,
+        // auto-expiring notification consistent with the rest of the dashboard's style.
+        const ICONS = { success: 'check-circle', error: 'alert-circle', info: 'info' };
+        function showToast(message, type = 'info', duration = 4000) {
+            const stack = document.getElementById('admin-toast-stack');
+            if (!stack) return;
+
+            const toast = document.createElement('div');
+            toast.className = `admin-toast ${type}`;
+            toast.innerHTML = `
+                <i data-lucide="${ICONS[type] || ICONS.info}" class="toast-icon"></i>
+                <span>${message}</span>
+                <i data-lucide="x" class="toast-close"></i>
+            `;
+            stack.appendChild(toast);
+            lucide.createIcons();
+
+            requestAnimationFrame(() => toast.classList.add('visible'));
+
+            const dismiss = () => {
+                toast.classList.remove('visible');
+                setTimeout(() => toast.remove(), 250);
+            };
+
+            toast.querySelector('.toast-close').addEventListener('click', dismiss);
+            if (duration > 0) setTimeout(dismiss, duration);
+        }
+
         // The ticket/admin API lives at /api/* on this same Vercel deployment
         // (see /api), backed by Neon Postgres — no separate host to resolve.
         let API_BASE = '';
@@ -1223,14 +1317,14 @@
                 });
 
                 if (response.ok) {
-                    alert('Ticket closed.');
+                    showToast('Ticket closed.', 'success');
                     loadActiveTickets();
                     closeModal();
                 } else {
-                    alert('Failed to close ticket.');
+                    showToast('Failed to close ticket.', 'error');
                 }
             } catch (err) {
-                alert('Network Error');
+                showToast('Network error — please try again.', 'error');
             }
         }
 
@@ -1266,10 +1360,10 @@
                         loadActiveTickets();
                     }
                 } else {
-                    alert('Failed to send reply.');
+                    showToast('Failed to send reply.', 'error');
                 }
             } catch (err) {
-                alert('Network Error');
+                showToast('Network error — please try again.', 'error');
             } finally {
                 if (btn) {
                     btn.innerHTML = original;
@@ -1468,7 +1562,7 @@
             const imageUrl = document.getElementById('announce-image').value;
 
             if (!channel || !content) {
-                alert('Please provide a channel ID and content.');
+                showToast('Please provide a channel ID and content.', 'error');
                 return;
             }
 
@@ -1497,14 +1591,14 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('Announcement published successfully!');
+                    showToast('Announcement published successfully!', 'success');
                     document.getElementById('announce-title').value = '';
                     document.getElementById('announce-content').value = '';
                 } else {
-                    alert('Error: ' + data.error);
+                    showToast('Error: ' + data.error, 'error');
                 }
             } catch (err) {
-                alert('Network Error: ' + err.message);
+                showToast('Network error: ' + err.message, 'error');
             } finally {
                 btn.innerHTML = original;
                 lucide.createIcons();
@@ -1532,7 +1626,7 @@
             const imageUrl = document.getElementById('dm-image-url').value;
 
             if (!userId || !content) {
-                alert('Please provide a Discord ID and message content.');
+                showToast('Please provide a Discord ID and message content.', 'error');
                 return;
             }
 
@@ -1562,14 +1656,14 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('Direct Message sent successfully!');
+                    showToast('Direct message sent successfully!', 'success');
                     document.getElementById('dm-user-id').value = '';
                     document.getElementById('dm-content').value = '';
                 } else {
-                    alert('Error: ' + data.error);
+                    showToast('Error: ' + data.error, 'error');
                 }
             } catch (err) {
-                alert('Network Error: ' + err.message);
+                showToast('Network error: ' + err.message, 'error');
             } finally {
                 btn.innerHTML = original;
                 lucide.createIcons();
