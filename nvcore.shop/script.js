@@ -143,10 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            mobileToggle.querySelector('i').setAttribute('data-lucide',
-                navLinks.classList.contains('active') ? 'x' : 'menu'
-            );
-            lucide.createIcons();
+            const icon = mobileToggle.querySelector('i, svg');
+            if (icon && icon.tagName.toLowerCase() === 'i') {
+                icon.setAttribute('data-lucide',
+                    navLinks.classList.contains('active') ? 'x' : 'menu'
+                );
+                lucide.createIcons();
+            }
         });
 
         mobileToggle.addEventListener('keydown', (e) => {
