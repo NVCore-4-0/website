@@ -987,7 +987,7 @@ document.addEventListener('DOMContentLoaded', () => {
         supportFab.classList.add('active');
         const session = getSession();
 
-        if (!session || !session.authenticated) {
+        if (!session || !session.authenticated || !session.access_token) {
             ticketHeading.textContent = 'Support';
             showTicketView(viewGuest);
             return;
@@ -1159,14 +1159,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ subject, message })
             });
-            if (!res.ok) throw new Error('Failed to create ticket');
+            if (!res.ok) {
+                if (res.status === 401) {
+                    localStorage.removeItem('discord_user');
+                    throw new Error('Your Discord session expired. Please sign in again.');
+                }
+                const details = await res.json().catch(() => null);
+                throw new Error(details?.error || 'Failed to create ticket');
+            }
             const created = await res.json();
 
             ticketSubjectInput.value = '';
             ticketMessageInput.value = '';
             openTicketChat(created.id, subject);
         } catch (err) {
-            alert('Could not open a ticket right now. Please try again in a moment.');
+            alert(err.message || 'Could not open a ticket right now. Please try again in a moment.');
         } finally {
             btnInner.innerHTML = original;
             ticketSubmitBtn.disabled = false;
