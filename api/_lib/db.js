@@ -39,6 +39,20 @@ async function ensureSchema() {
 
     await sql`CREATE INDEX IF NOT EXISTS idx_tickets_discord_id ON tickets(discord_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_ticket_messages_ticket_id ON ticket_messages(ticket_id)`;
+
+    // Single shared room for internal staff-to-staff chat, separate from customer tickets.
+    await sql`
+      CREATE TABLE IF NOT EXISTS staff_messages (
+        id SERIAL PRIMARY KEY,
+        author_id TEXT NOT NULL,
+        author TEXT NOT NULL,
+        avatar TEXT,
+        content TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_staff_messages_created_at ON staff_messages(created_at)`;
   })();
 
   return schemaReady;

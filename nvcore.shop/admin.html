@@ -569,6 +569,37 @@
             align-items: center;
         }
 
+        /* Staff Chat */
+        .staff-chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 320px);
+            min-height: 420px;
+            overflow: hidden;
+        }
+
+        .staff-chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .staff-chat-input-row {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .staff-chat-input-row .input-field {
+            flex: 1;
+        }
+
         .modal-actions {
             display: flex;
             gap: 0.5rem;
@@ -696,6 +727,9 @@
                 <div class="nav-item" data-access="admin,management,support" onclick="switchSection('transcripts', this)">
                     <i data-lucide="message-square"></i> Transcripts
                 </div>
+                <div class="nav-item" data-access="admin,management,support" onclick="switchSection('staff-chat', this)">
+                    <i data-lucide="users"></i> Staff Chat
+                </div>
                 <div class="nav-item" data-access="admin,management" onclick="switchSection('console', this)">
                     <i data-lucide="terminal"></i> Live Console
                 </div>
@@ -811,6 +845,30 @@
 
                     <div id="transcript-list" class="transcript-grid">
                         <!-- Data loaded via JS -->
+                    </div>
+                </section>
+
+                <!-- Section: Staff Chat -->
+                <section id="staff-chat" class="dashboard-section">
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Staff <span>Chat</span></h2>
+                        <p style="color: var(--text-muted);">Internal chat for Administrator, Management, and Support
+                            Team — not visible to customers.</p>
+                    </div>
+
+                    <div class="staff-chat-container glass">
+                        <div id="staff-chat-body" class="staff-chat-body">
+                            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                <i data-lucide="loader-2" class="spin"></i> Loading staff chat...
+                            </div>
+                        </div>
+                        <div class="staff-chat-input-row">
+                            <input type="text" id="staff-chat-input" class="input-field"
+                                placeholder="Message the team...">
+                            <button class="button" id="staff-chat-send-btn">
+                                <div class="inner" style="padding: 12px 20px;"><i data-lucide="send"></i></div>
+                            </button>
+                        </div>
                     </div>
                 </section>
 
@@ -1143,6 +1201,7 @@
                 'overview': 'Dashboard Overview',
                 'active-tickets': 'Active Support Tickets',
                 'transcripts': 'Ticket Transcripts',
+                'staff-chat': 'Staff Chat',
                 'console': 'Live Console Bridge',
                 'announcements': 'Announcement Manager',
                 'dm-manager': 'Direct DM Tool',
@@ -1157,6 +1216,11 @@
             if (sectionId === 'active-tickets') loadActiveTickets();
             if (sectionId === 'transcripts') loadTranscripts();
             if (sectionId === 'audit-logs') loadAuditLogs();
+            if (sectionId === 'staff-chat') {
+                openStaffChat();
+            } else {
+                stopStaffChatPolling();
+            }
         }
 
         // Active Tickets Logic (on-site tickets, stored in your own DB — not Discord channels)
@@ -1303,6 +1367,112 @@
             }
             lucide.createIcons();
         }
+
+        // Staff Chat: single shared room for Administrator/Management/Support Team
+        let staffChatPollInterval = null;
+        let staffChatLastTimestamp = 0;
+
+        function stopStaffChatPolling() {
+            if (staffChatPollInterval) {
+                clearInterval(staffChatPollInterval);
+                staffChatPollInterval = null;
+            }
+        }
+
+        function renderStaffMessage(m, session) {
+            const bubbleClass = m.authorId === session.id ? 'staff' : 'user';
+            const content = (m.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `
+                <div class="chat-bubble ${bubbleClass}">
+                    <div class="chat-meta">
+                        ${bubbleClass === 'user' ? `<img src="${m.avatar || 'assets/logo.png'}" class="chat-avatar">` : ''}
+                        <span style="font-weight: 700;">${m.author}</span>
+                        <span>${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        ${bubbleClass === 'staff' ? `<img src="${m.avatar || 'assets/logo.png'}" class="chat-avatar">` : ''}
+                    </div>
+                    <div style="white-space: pre-wrap;">${content}</div>
+                </div>
+            `;
+        }
+
+        async function loadStaffChat(isPolling = false) {
+            const body = document.getElementById('staff-chat-body');
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const url = isPolling
+                    ? `${API_BASE}/api/staff/messages?since=${staffChatLastTimestamp}`
+                    : `${API_BASE}/api/staff/messages`;
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                if (!response.ok) throw new Error('Failed to load staff chat');
+                const messages = await response.json();
+
+                if (isPolling) {
+                    if (messages.length === 0) return;
+                    const wasAtBottom = body.scrollHeight - body.scrollTop <= body.clientHeight + 100;
+                    body.insertAdjacentHTML('beforeend', messages.map(m => renderStaffMessage(m, session)).join(''));
+                    staffChatLastTimestamp = new Date(messages[messages.length - 1].timestamp).getTime();
+                    if (wasAtBottom) body.scrollTop = body.scrollHeight;
+                } else {
+                    if (messages.length === 0) {
+                        body.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No messages yet — say hello to the team.</div>';
+                    } else {
+                        body.innerHTML = messages.map(m => renderStaffMessage(m, session)).join('');
+                        staffChatLastTimestamp = new Date(messages[messages.length - 1].timestamp).getTime();
+                    }
+                    body.scrollTop = body.scrollHeight;
+                }
+                lucide.createIcons();
+            } catch (err) {
+                if (!isPolling) {
+                    body.innerHTML = '<div style="text-align: center; padding: 2rem; color: #ff4d4d;">Failed to load staff chat.</div>';
+                }
+            }
+        }
+
+        async function sendStaffMessage() {
+            const input = document.getElementById('staff-chat-input');
+            const content = input.value.trim();
+            if (!content) return;
+
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+            input.value = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/staff/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ content })
+                });
+                if (response.ok) {
+                    loadStaffChat(true);
+                } else {
+                    showToast('Failed to send message.', 'error');
+                }
+            } catch (err) {
+                showToast('Network error — please try again.', 'error');
+            }
+        }
+
+        function openStaffChat() {
+            loadStaffChat(false);
+            stopStaffChatPolling();
+            staffChatPollInterval = setInterval(() => loadStaffChat(true), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sendBtn = document.getElementById('staff-chat-send-btn');
+            const input = document.getElementById('staff-chat-input');
+            if (sendBtn) sendBtn.addEventListener('click', sendStaffMessage);
+            if (input) input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendStaffMessage();
+            });
+        });
 
         async function closeTicket(ticketId) {
             if (!confirm('Are you sure you want to close this ticket?')) return;
