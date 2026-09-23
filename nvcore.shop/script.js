@@ -2,6 +2,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide Icons
     lucide.createIcons();
 
+    // Clean URL routing (/home, /about, /scripts, /services) -> scroll to matching section.
+    // The actual path is served by index.html via a Vercel rewrite; this just handles the
+    // in-page scroll and keeps the address bar on the clean path when navigating via nav links.
+    const sectionNavLinks = document.querySelectorAll('a[data-section]');
+    const scrollToSection = (sectionId) => {
+        const target = document.getElementById(sectionId);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const initialSection = window.location.pathname.replace(/^\/+/, '');
+    const matchingLink = document.querySelector(`a[data-section][href="/${initialSection}"]`);
+    if (matchingLink) {
+        // Defer slightly so layout/loader has settled before scrolling
+        setTimeout(() => scrollToSection(matchingLink.dataset.section), 150);
+    }
+
+    const canUseCleanUrls = window.location.protocol !== 'file:';
+
+    sectionNavLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+            const sectionId = link.dataset.section;
+
+            // file:// (local testing without a server) can't resolve /about as a real path,
+            // so just scroll instead of touching the URL.
+            if (!canUseCleanUrls) {
+                e.preventDefault();
+                scrollToSection(sectionId);
+                return;
+            }
+
+            e.preventDefault();
+            const path = link.getAttribute('href');
+            if (window.location.pathname !== path) {
+                window.history.pushState({}, '', path);
+            }
+            scrollToSection(sectionId);
+        });
+    });
+
     // Loader
     const loader = document.getElementById('loader');
     const hideLoader = () => {
