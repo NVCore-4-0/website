@@ -938,23 +938,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Support Ticket Widget
-    // Route production ticket traffic through the same-origin Vercel proxy.
-    const SOULIXER_API = '';
-    const LOCAL_API = 'http://localhost:8080';
-    let ticketApiBase = SOULIXER_API;
-
-    const resolveTicketApi = async () => {
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            try {
-                const res = await fetch(`${LOCAL_API}/api/health`);
-                if (res.ok) {
-                    ticketApiBase = LOCAL_API;
-                    return;
-                }
-            } catch (e) { /* fall through to production bot */ }
-        }
-        ticketApiBase = SOULIXER_API;
-    };
+    // The ticket API lives at /api/tickets/* on this same Vercel deployment (see /api),
+    // backed by Neon Postgres — no separate host to resolve.
+    const ticketApiBase = '';
+    const resolveTicketApi = async () => {};
 
     const supportFab = document.getElementById('support-fab');
     const ticketPanel = document.getElementById('ticket-panel');

@@ -93,32 +93,26 @@
                 supportTeam: ['1411289079282139226']
             };
 
-            const API_BASES = ['http://localhost:8080', 'http://ny-us-01.soulixer.in:25432'];
-
-            // Ask the backend (which holds the bot token) which of our known staff roles this user has.
-            // This never trusts the client — it's just used to light up UI; every admin API call must
-            // independently re-check roles server-side before returning real data.
+            // The role-check API lives at /api/user/roles/:discordId on this same Vercel
+            // deployment (see /api), backed by the bot token — never exposed to the client.
             const fetchStaffRoles = async (discordId) => {
-                for (const base of API_BASES) {
-                    try {
-                        const res = await fetch(`${base}/api/user/roles/${discordId}`, {
-                            headers: { Authorization: `Bearer ${accessToken}` }
-                        });
-                        if (!res.ok) continue;
-                        const data = await res.json();
-                        const roleIds = Array.isArray(data.roles) ? data.roles : [];
-                        const hasAny = (idList) => idList.some((id) => roleIds.includes(id));
-                        return {
-                            isAdministrator: hasAny(ROLE_IDS.administrator),
-                            isManagement: hasAny(ROLE_IDS.management),
-                            isSupportTeam: hasAny(ROLE_IDS.supportTeam)
-                        };
-                    } catch (e) {
-                        // try next base
-                    }
+                try {
+                    const res = await fetch(`/api/user/roles/${discordId}`, {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    });
+                    if (!res.ok) throw new Error('roles lookup failed');
+                    const data = await res.json();
+                    const roleIds = Array.isArray(data.roles) ? data.roles : [];
+                    const hasAny = (idList) => idList.some((id) => roleIds.includes(id));
+                    return {
+                        isAdministrator: hasAny(ROLE_IDS.administrator),
+                        isManagement: hasAny(ROLE_IDS.management),
+                        isSupportTeam: hasAny(ROLE_IDS.supportTeam)
+                    };
+                } catch (e) {
+                    // Backend unreachable: fail closed, no staff access
+                    return { isAdministrator: false, isManagement: false, isSupportTeam: false };
                 }
-                // Backend unreachable: fail closed, no staff access
-                return { isAdministrator: false, isManagement: false, isSupportTeam: false };
             };
 
             fetch('https://discord.com/api/users/@me', {

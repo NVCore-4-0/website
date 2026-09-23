@@ -967,27 +967,10 @@
     </div>
 
     <script>
-        let API_BASE = ''; // Default relative
-        const SOULIXER_URL = 'http://ny-us-01.soulixer.in:25432/';
-        const LOCAL_URL = 'http://localhost:8080/';
-
-        async function initConnectivity() {
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                // Check if local bot is running
-                try {
-                    const res = await fetch(`${LOCAL_URL}/api/health`);
-                    if (res.ok) {
-                        API_BASE = LOCAL_URL;
-                        console.log('Connected to Local Bot on 8080');
-                    } else {
-                        throw new Error();
-                    }
-                } catch (e) {
-                    API_BASE = SOULIXER_URL;
-                    console.log('Local bot not found, using Soulixer Server');
-                }
-            }
-        }
+        // The ticket/admin API lives at /api/* on this same Vercel deployment
+        // (see /api), backed by Neon Postgres — no separate host to resolve.
+        let API_BASE = '';
+        async function initConnectivity() {}
         let currentTranscripts = [];
         let selectedTemplate = 'default';
         let messageStyle = 'plain';
