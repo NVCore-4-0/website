@@ -1970,11 +1970,11 @@ li {
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .section-grid, .contact-grid {
+    .section-grid, .contact-grid, .discord-grid {
         grid-template-columns: 1fr;
         gap: 3rem;
     }
-    
+
     .hero-title { font-size: 4.5rem; }
 }
 
@@ -2021,6 +2021,17 @@ li {
     .team-columns {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .custom-discord-card {
+        padding: 2rem 1.5rem;
+        border-radius: 24px;
+        gap: 1.75rem;
+    }
+
+    .discord-widget-container {
+        width: 100%;
+        max-width: 100%;
     }
 }
 
