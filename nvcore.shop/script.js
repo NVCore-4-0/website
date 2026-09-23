@@ -938,7 +938,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Support Ticket Widget
-    const SOULIXER_API = 'http://ny-us-01.soulixer.in:25432';
+    // Route production ticket traffic through the same-origin Vercel proxy.
+    const SOULIXER_API = '';
     const LOCAL_API = 'http://localhost:8080';
     let ticketApiBase = SOULIXER_API;
 
