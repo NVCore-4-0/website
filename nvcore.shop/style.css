@@ -975,21 +975,6 @@ li {
     width: 100%;
 }
 
-.team-columns {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center the whole group */
-    gap: 2rem;
-    margin-top: 1rem;
-}
-
-.team-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
 .column-title {
     font-size: 0.7rem;
     letter-spacing: 3px;
@@ -1000,87 +985,6 @@ li {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 0.5rem;
     width: fit-content;
-}
-
-.team-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Center the cards */
-    gap: 1.5rem;
-    width: 100%;
-    margin-bottom: 2rem;
-}
-
-.team-member-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 3rem 2rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-radius: 24px;
-    transition: transform 0.1s ease-out, background 0.3s ease;
-    border: 1px solid var(--glass-border);
-    width: 280px;
-    min-height: 240px;
-    transform-style: preserve-3d;
-}
-
-.team-member-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(
-        600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
-        rgba(255, 255, 255, 0.1),
-        transparent 40%
-    );
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.team-member-card:hover::after {
-    opacity: 1;
-}
-
-.team-member-card:hover {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
-}
-
-.team-member-card .member-icon {
-    width: 65px;
-    height: 65px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--primary);
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
-    transition: 0.4s;
-    transform: translateZ(20px);
-}
-
-.team-member-card:hover .member-icon {
-    background: var(--grad-primary);
-    color: var(--white);
-    border-color: transparent;
-    transform: translateZ(40px) scale(1.1) rotate(5deg);
-    box-shadow: 0 0 30px var(--primary-glow);
-}
-
-.team-member-card h4 {
-    margin-bottom: 0.5rem;
-    text-align: center;
-    width: 100%;
 }
 
 .team-member-card p {
@@ -1723,10 +1627,11 @@ li {
     border-radius: 12px;
 }
 
+/* Team Section — hero-style cards, founders get visual priority */
 .team-columns {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 4rem;
     margin-top: 3rem;
 }
 
@@ -1734,7 +1639,7 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 2.5rem;
     width: 100%;
 }
 
@@ -1765,59 +1670,54 @@ li {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: stretch;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1.75rem;
     width: 100%;
 }
 
 .team-member-card {
-    width: 260px;
-    padding: 2.5rem 1.5rem;
+    width: 240px;
+    padding: 2.25rem 1.5rem;
     text-align: center;
-    border-radius: 32px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.member-tag {
-    margin-top: 1rem;
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: var(--primary);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.3rem 0.8rem;
-    border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.team-member-card {
-    width: 280px;
-    padding: 3.5rem 2rem;
-    text-align: center;
-    border-radius: 40px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: transform 0.1s ease-out; /* Snappier for tilt */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
-    transform-style: preserve-3d; /* Enable 3D depth */
+}
+
+.team-member-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Founders/owners get a bigger, more prominent card */
+.team-member-card.founder {
+    width: 300px;
+    padding: 3rem 2rem;
+    border-radius: 32px;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.team-member-card.founder:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 255, 255, 0.06);
 }
 
 .team-member-card .glare {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                rgba(255, 255, 255, 0.15) 0%, 
+    inset: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.12) 0%,
                 transparent 60%);
     pointer-events: none;
     opacity: 0;
@@ -1828,42 +1728,38 @@ li {
     opacity: 1;
 }
 
-.member-icon {
-    transform: translateZ(50px); /* Lift icon in 3D space */
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-    color: var(--primary);
-    font-size: 2rem;
-    position: relative;
-    transition: 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+.team-member-card h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.35rem;
+    color: var(--white);
+    letter-spacing: 0.2px;
 }
 
-.team-member-card h4 {
-    transform: translateZ(30px); /* Lift name slightly */
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-    letter-spacing: 1px;
+.team-member-card.founder h4 {
+    font-size: 1.6rem;
 }
 
 .team-member-card p {
-    transform: translateZ(20px); /* Lift role even less */
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
     font-weight: 500;
 }
 
+.team-member-card.founder p {
+    font-size: 0.95rem;
+}
+
 .member-tag {
-    transform: translateZ(40px); /* Lift tag */
-    margin-top: 1.5rem;
+    margin-top: 1rem;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* FAQ */
@@ -2013,6 +1909,17 @@ li {
     .team-columns {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .team-member-card,
+    .team-member-card.founder {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .team-member-card.founder .member-avatar {
+        width: 96px;
+        height: 96px;
     }
 
     .custom-discord-card {
@@ -3298,18 +3205,18 @@ li {
 
 /* Team Avatars */
 .member-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 20px;
+    width: 88px;
+    height: 88px;
+    border-radius: 22px;
     overflow: hidden;
     margin-bottom: 1.5rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .member-avatar img {
@@ -3318,29 +3225,17 @@ li {
     object-fit: cover;
 }
 
+.team-member-card.founder .member-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 28px;
+    margin-bottom: 1.75rem;
+}
+
 .team-member-card:hover .member-avatar {
-    transform: scale(1.1) rotate(5deg);
-    border-color: var(--primary);
-    box-shadow: 0 0 20px var(--primary-glow);
-}
-
-.team-member-card {
-    text-align: center;
-    padding: 3rem 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.member-tag {
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: var(--primary) !important;
-    padding: 0.3rem 0.8rem;
-    border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    font-weight: 700;
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
 }
 
 /* Shared form input (also used by the support ticket panel) */
