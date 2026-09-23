@@ -88,9 +88,9 @@
             }
 
             const ROLE_IDS = {
-                administrator: '1551997765889040567',
-                management: '1551997271409954836',
-                supportTeam: '1411289079282139226'
+                administrator: ['1551997765889040567', '1411252422055297135'],
+                management: ['1551997271409954836'],
+                supportTeam: ['1411289079282139226']
             };
 
             const API_BASES = ['http://localhost:8080', 'http://ny-us-01.soulixer.in:25432'];
@@ -107,10 +107,11 @@
                         if (!res.ok) continue;
                         const data = await res.json();
                         const roleIds = Array.isArray(data.roles) ? data.roles : [];
+                        const hasAny = (idList) => idList.some((id) => roleIds.includes(id));
                         return {
-                            isAdministrator: roleIds.includes(ROLE_IDS.administrator),
-                            isManagement: roleIds.includes(ROLE_IDS.management),
-                            isSupportTeam: roleIds.includes(ROLE_IDS.supportTeam)
+                            isAdministrator: hasAny(ROLE_IDS.administrator),
+                            isManagement: hasAny(ROLE_IDS.management),
+                            isSupportTeam: hasAny(ROLE_IDS.supportTeam)
                         };
                     } catch (e) {
                         // try next base
