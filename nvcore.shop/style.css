@@ -928,6 +928,12 @@ li {
     text-align: center;
 }
 
+/* This one sits below the team cards instead of above them, so flip the spacing */
+.team-footer-heading {
+    margin-bottom: 0;
+    margin-top: 4rem;
+}
+
 .section-grid {
     display: flex;
     flex-direction: column;
