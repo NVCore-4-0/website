@@ -27,7 +27,21 @@
   .discord-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
   .d-number { font-size: 2rem; }
   .discord-btn-premium { width: 100% !important; }
+  .discord-proof { overflow: hidden; }
+  .discord-grid { width: 100%; min-width: 0; }
+  .discord-grid > .discord-info,
+  .discord-grid > .discord-widget-container {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
   .discord-widget-container, .custom-discord-card { width: 100%; max-width: none; }
+  .custom-discord-card { overflow: hidden; }
+  .discord-card-header, .discord-card-body { min-width: 0; }
+  .discord-logo-wrap, .online-indicator { min-width: 0; }
+  .online-indicator { white-space: nowrap; }
   .glass { border-radius: 20px; }
   .project-grid, .features-grid, .team-cards { grid-template-columns: 1fr !important; flex-direction: column; }
   .project-card, .preview-card, .team-card { width: 100%; }
