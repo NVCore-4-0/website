@@ -1,0 +1,62 @@
+/* Mobile layout overrides */
+@media (max-width: 700px) {
+  :root { --nav-height: 70px; }
+  html, body { width: 100%; overflow-x: hidden; }
+  .container { width: 100%; max-width: none; padding: 0 1.25rem; }
+  .section { padding: 4.5rem 0; }
+  .navbar .container { padding: 0 1rem; }
+  .navbar { position: sticky; top: 0; }
+  .logo-text { font-size: 1.15rem; letter-spacing: 0; }
+  .nav-logo-img, .logo-mark { width: 38px; height: 38px; }
+  .nav-links { position: absolute; top: calc(100% + 0.5rem); left: 1rem; right: 1rem; display: none; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--glass-border); border-radius: 18px; background: rgba(12, 12, 16, 0.96); backdrop-filter: blur(22px); }
+  .nav-links.active { display: flex; }
+  .nav-links li a { display: block; padding: 0.75rem 1rem; }
+  .mobile-toggle { display: flex !important; margin-left: auto; }
+  .hero { min-height: auto; padding: 4rem 0 5rem; }
+  .hero-content { width: 100%; max-width: none; text-align: left; }
+  .hero-title { font-size: clamp(3.25rem, 17vw, 5rem); line-height: .95; letter-spacing: -0.06em; }
+  .hero-subtitle { font-size: 1.55rem; line-height: 1.15; }
+  .hero-description { font-size: 1rem; line-height: 1.55; margin-bottom: 2rem; }
+  .hero-actions { display: grid; grid-template-columns: 1fr; gap: .75rem; width: 100%; }
+  .hero-actions .button { width: 100%; }
+  .section-title { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; }
+  .section-grid, .discord-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem;
+    align-items: stretch;
+    text-align: left;
+  }
+  .discord-info { width: 100% !important; }
+  .discord-widget-container {
+    display: none !important;
+  }
+  .discord-info .section-title { text-align: left !important; }
+  .discord-info p { font-size: 1rem; }
+  .discord-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .d-number { font-size: 2rem; }
+  .discord-btn-premium { width: 100% !important; }
+  .discord-proof { overflow: hidden; }
+  .discord-grid { width: 100%; min-width: 0; }
+  .discord-grid > .discord-info,
+  .discord-grid > .discord-widget-container {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .discord-widget-container, .custom-discord-card { width: 100%; max-width: none; }
+  .custom-discord-card { overflow: hidden; }
+  .discord-card-header, .discord-card-body { min-width: 0; }
+  .discord-logo-wrap, .online-indicator { min-width: 0; }
+  .online-indicator { white-space: nowrap; }
+  .glass { border-radius: 20px; }
+  .project-grid, .features-grid, .team-cards { grid-template-columns: 1fr !important; flex-direction: column; }
+  .project-card, .preview-card, .team-card { width: 100%; }
+  img { max-width: 100%; }
+}
+
+@media (min-width: 701px) {
+  .mobile-toggle { display: none !important; }
+}
