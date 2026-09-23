@@ -1371,12 +1371,16 @@
         // Staff Chat: single shared room for Administrator/Management/Support Team
         let staffChatPollInterval = null;
         let staffChatLastTimestamp = 0;
+        let staffChatSeenIds = new Set();
+        let staffChatFetchInFlight = false;
 
         function stopStaffChatPolling() {
             if (staffChatPollInterval) {
                 clearInterval(staffChatPollInterval);
                 staffChatPollInterval = null;
             }
+            staffChatSeenIds = new Set();
+            staffChatFetchInFlight = false;
         }
 
         function renderStaffMessage(m, session) {
@@ -1396,6 +1400,11 @@
         }
 
         async function loadStaffChat(isPolling = false) {
+            // Guard against overlapping fetches (e.g. a manual send and the 3s interval
+            // firing close together) which would otherwise both append the same batch.
+            if (isPolling && staffChatFetchInFlight) return;
+            if (isPolling) staffChatFetchInFlight = true;
+
             const body = document.getElementById('staff-chat-body');
             const session = JSON.parse(localStorage.getItem('discord_user'));
 
@@ -1409,17 +1418,21 @@
                 if (!response.ok) throw new Error('Failed to load staff chat');
                 const messages = await response.json();
 
+                // Belt-and-suspenders: even if the same message arrives twice, never render it twice.
+                const fresh = messages.filter(m => !staffChatSeenIds.has(m.id));
+                fresh.forEach(m => staffChatSeenIds.add(m.id));
+
                 if (isPolling) {
-                    if (messages.length === 0) return;
+                    if (fresh.length === 0) return;
                     const wasAtBottom = body.scrollHeight - body.scrollTop <= body.clientHeight + 100;
-                    body.insertAdjacentHTML('beforeend', messages.map(m => renderStaffMessage(m, session)).join(''));
+                    body.insertAdjacentHTML('beforeend', fresh.map(m => renderStaffMessage(m, session)).join(''));
                     staffChatLastTimestamp = new Date(messages[messages.length - 1].timestamp).getTime();
                     if (wasAtBottom) body.scrollTop = body.scrollHeight;
                 } else {
                     if (messages.length === 0) {
                         body.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No messages yet — say hello to the team.</div>';
                     } else {
-                        body.innerHTML = messages.map(m => renderStaffMessage(m, session)).join('');
+                        body.innerHTML = fresh.map(m => renderStaffMessage(m, session)).join('');
                         staffChatLastTimestamp = new Date(messages[messages.length - 1].timestamp).getTime();
                     }
                     body.scrollTop = body.scrollHeight;
@@ -1429,6 +1442,8 @@
                 if (!isPolling) {
                     body.innerHTML = '<div style="text-align: center; padding: 2rem; color: #ff4d4d;">Failed to load staff chat.</div>';
                 }
+            } finally {
+                if (isPolling) staffChatFetchInFlight = false;
             }
         }
 
