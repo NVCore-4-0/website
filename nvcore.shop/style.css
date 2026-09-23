@@ -697,7 +697,9 @@ li {
 .astro-svg {
     display: block;
     overflow: visible;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+    /* No drop-shadow here: it's recomputed from the SVG's alpha mask every frame while the
+       astronaut is being transformed, which is expensive. A plain opacity-based shadow on
+       the (also transformed, but filter-free) parent is visually close and nearly free. */
 }
 
 .astro-svg .seg-o {

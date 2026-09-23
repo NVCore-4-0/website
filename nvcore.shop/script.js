@@ -213,18 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Background Parallax logic
-    const spheres = document.querySelectorAll('.gradient-sphere');
-    window.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth) - 0.5;
-        const y = (e.clientY / window.innerHeight) - 0.5;
-
-        spheres.forEach((sphere, index) => {
-            const factor = (index + 1) * 30; // Increased factor
-            sphere.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
-        });
-    });
-
     // FAQ Accordion logic
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
@@ -727,6 +715,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let wanderTargetY = posY;
         let wanderTimer = null;
 
+        // Pause all rAF work while the tab is hidden — no point animating an invisible page
+        let isTabVisible = !document.hidden;
+        document.addEventListener('visibilitychange', () => {
+            isTabVisible = !document.hidden;
+        });
+
         let isThrowDragging = false;
         let grabOffsetX = 0, grabOffsetY = 0;
         let throwVelX = 0, throwVelY = 0;
@@ -746,9 +740,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const friction = 0.985;
 
-        // Single render loop: position (JS-driven) + idle bob + bank + cursor nudge, all composed once
-        const renderLoop = () => {
-            bobPhase += 0.02;
+        // Single render loop: position (JS-driven) + idle bob + bank + cursor nudge, all composed once.
+        // Throttled to ~30fps (plenty for this slow drift) and skipped entirely while the tab is hidden.
+        let lastRenderTime = 0;
+        const renderLoop = (now) => {
+            requestAnimationFrame(renderLoop);
+            if (!isTabVisible) return;
+            if (now - lastRenderTime < 32) return; // ~30fps
+            lastRenderTime = now;
+
+            bobPhase += 0.04;
             const idleBobY = Math.sin(bobPhase) * 5;
             const idleBobX = Math.sin(bobPhase * 0.5) * 3;
             // Small fast wobble + slow lazy tumble, like drifting in zero-G
@@ -771,8 +772,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 `translate(${(idleBobX + pushX).toFixed(2)}px, ${(idleBobY + pushY).toFixed(2)}px) rotate(${(idleBobRot + bankRot + pushRot).toFixed(2)}deg)`;
             // Limbs counter-rotate against the bank so they trail behind the motion
             astronautTilt.style.setProperty('--trail', `${(-bankRot * 0.9).toFixed(2)}deg`);
-
-            requestAnimationFrame(renderLoop);
         };
         requestAnimationFrame(renderLoop);
 
@@ -791,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const wanderStep = () => {
-            if (!isThrowDragging && !inMomentum) {
+            if (isTabVisible && !isThrowDragging && !inMomentum) {
                 posX += (wanderTargetX - posX) * 0.008;
                 posY += (wanderTargetY - posY) * 0.008;
             }
