@@ -218,6 +218,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Mouse-follow glow for project/script cards (same effect as team cards, no 3D tilt —
+    // the card already has its own hover lift defined in CSS)
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+            card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+    });
+
     // FAQ Accordion logic
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
