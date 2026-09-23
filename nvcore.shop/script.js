@@ -163,9 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
-                const icon = mobileToggle.querySelector('i');
-                if (icon) icon.setAttribute('data-lucide', 'menu');
-                lucide.createIcons();
+                const icon = mobileToggle.querySelector('i, svg');
+                if (icon && icon.tagName.toLowerCase() === 'i') {
+                    icon.setAttribute('data-lucide', 'menu');
+                    lucide.createIcons();
+                }
             });
         });
     }
