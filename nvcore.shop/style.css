@@ -1227,22 +1227,7 @@ li {
     height: 220px;
     position: relative;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.hover-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures image matches resolution/aspect ratio */
-    opacity: 0;
-    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 2;
-}
-
-.project-card:hover .hover-img {
-    opacity: 1;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.2) 70%);
 }
 
 .placeholder-img {
@@ -1256,9 +1241,9 @@ li {
 }
 
 .project-card-logo {
-    width: 80px;
+    width: 84px;
     height: auto;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.25));
     transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent !important;
     border: none !important;
@@ -1266,8 +1251,8 @@ li {
 }
 
 .project-card:hover .project-card-logo {
-    transform: scale(0.9);
-    opacity: 0.3;
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.4));
 }
 
 .project-content {
