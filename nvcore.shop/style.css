@@ -1642,7 +1642,7 @@ li {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-end;
+    align-items: stretch;
     flex-wrap: wrap;
     gap: 1.75rem;
     width: 100%;
@@ -1671,20 +1671,6 @@ li {
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
-/* Founders/owners get a bigger, more prominent card */
-.team-member-card.founder {
-    width: 300px;
-    padding: 3rem 2rem;
-    border-radius: 32px;
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.team-member-card.founder:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 255, 255, 0.06);
-}
-
 .team-member-card .glare {
     position: absolute;
     inset: 0;
@@ -1707,10 +1693,6 @@ li {
     letter-spacing: 0.2px;
 }
 
-.team-member-card.founder h4 {
-    font-size: 1.6rem;
-}
-
 .team-member-card p {
     display: inline-block;
     margin-top: 0.5rem;
@@ -1723,13 +1705,6 @@ li {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 100px;
-}
-
-.team-member-card.founder p {
-    font-size: 0.76rem;
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .member-tag {
@@ -1894,15 +1869,9 @@ li {
         gap: 2rem;
     }
 
-    .team-member-card,
-    .team-member-card.founder {
+    .team-member-card {
         width: 100%;
         max-width: 300px;
-    }
-
-    .team-member-card.founder .member-avatar {
-        width: 96px;
-        height: 96px;
     }
 
     .custom-discord-card {
@@ -3206,13 +3175,6 @@ li {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.team-member-card.founder .member-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 28px;
-    margin-bottom: 1.75rem;
 }
 
 .team-member-card:hover .member-avatar {
