@@ -20,8 +20,17 @@
   .hero-actions { display: grid; grid-template-columns: 1fr; gap: .75rem; width: 100%; }
   .hero-actions .button { width: 100%; }
   .section-title { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; }
-  .section-grid, .discord-grid { display: flex; flex-direction: column; gap: 2rem; align-items: stretch; text-align: left; }
-  .discord-info { width: 100%; }
+  .section-grid, .discord-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem;
+    align-items: stretch;
+    text-align: left;
+  }
+  .discord-info { width: 100% !important; }
+  .discord-widget-container {
+    display: none !important;
+  }
   .discord-info .section-title { text-align: left !important; }
   .discord-info p { font-size: 1rem; }
   .discord-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
