@@ -1204,23 +1204,27 @@ li {
 .project-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-        to right,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    transform: skewX(-25deg);
-    transition: 0.75s;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    opacity: 0;
+    pointer-events: none;
     z-index: 1;
+    transition: opacity 0.5s ease;
 }
 
 .project-card:hover::before {
-    left: 150%;
+    opacity: 1;
+    animation: card-glow-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes card-glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 16px rgba(255, 255, 255, 0.06);
+    }
+    50% {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 28px rgba(255, 255, 255, 0.14);
+    }
 }
 
 .project-img {
