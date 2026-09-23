@@ -721,6 +721,21 @@ document.addEventListener('DOMContentLoaded', () => {
             isTabVisible = !document.hidden;
         });
 
+        // Astronaut only lives in the hero/home section — fade out and stop once scrolled past it
+        const heroZone = document.getElementById('home');
+        let isInHeroZone = true;
+        const updateHeroZone = () => {
+            if (!heroZone) return;
+            const rect = heroZone.getBoundingClientRect();
+            const inZone = rect.bottom > 80; // still visible below the navbar
+            if (inZone !== isInHeroZone) {
+                isInHeroZone = inZone;
+                astronaut.classList.toggle('out-of-zone', !inZone);
+            }
+        };
+        updateHeroZone();
+        window.addEventListener('scroll', updateHeroZone, { passive: true });
+
         let isThrowDragging = false;
         let grabOffsetX = 0, grabOffsetY = 0;
         let throwVelX = 0, throwVelY = 0;
@@ -745,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let lastRenderTime = 0;
         const renderLoop = (now) => {
             requestAnimationFrame(renderLoop);
-            if (!isTabVisible) return;
+            if (!isTabVisible || !isInHeroZone) return;
             if (now - lastRenderTime < 32) return; // ~30fps
             lastRenderTime = now;
 
@@ -790,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const wanderStep = () => {
-            if (isTabVisible && !isThrowDragging && !inMomentum) {
+            if (isTabVisible && isInHeroZone && !isThrowDragging && !inMomentum) {
                 posX += (wanderTargetX - posX) * 0.008;
                 posY += (wanderTargetY - posY) * 0.008;
             }

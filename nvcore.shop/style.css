@@ -616,10 +616,18 @@ li {
     pointer-events: auto;
     cursor: grab;
     will-change: transform;
+    opacity: 1;
+    transition: opacity 0.4s ease;
 }
 
 .astronaut.grabbed {
     cursor: grabbing;
+}
+
+/* He only lives in the hero section — fade out and stop intercepting clicks once scrolled past */
+.astronaut.out-of-zone {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .astronaut-drift-layer {
