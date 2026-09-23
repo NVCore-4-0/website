@@ -16,10 +16,14 @@ async function getDiscordUser(req) {
   if (!res.ok) return null;
 
   const user = await res.json();
+  const avatarUrl = user.avatar
+    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+    : `https://cdn.discordapp.com/embed/avatars/${Number(BigInt(user.id) >> 22n) % 6}.png`;
+
   return {
     id: user.id,
     username: user.global_name || user.username,
-    avatar: user.avatar
+    avatar: avatarUrl
   };
 }
 
