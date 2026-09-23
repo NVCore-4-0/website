@@ -899,6 +899,299 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Support Ticket Widget
+    const SOULIXER_API = 'http://ny-us-01.soulixer.in:25432';
+    const LOCAL_API = 'http://localhost:8080';
+    let ticketApiBase = SOULIXER_API;
+
+    const resolveTicketApi = async () => {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            try {
+                const res = await fetch(`${LOCAL_API}/api/health`);
+                if (res.ok) {
+                    ticketApiBase = LOCAL_API;
+                    return;
+                }
+            } catch (e) { /* fall through to production bot */ }
+        }
+        ticketApiBase = SOULIXER_API;
+    };
+
+    const supportFab = document.getElementById('support-fab');
+    const ticketPanel = document.getElementById('ticket-panel');
+    const ticketPanelClose = document.getElementById('ticket-panel-close');
+    const ticketBackBtn = document.getElementById('ticket-back-btn');
+    const ticketHeading = document.getElementById('ticket-panel-heading');
+    const openTicketsTrigger = document.getElementById('open-tickets-trigger');
+
+    const viewGuest = document.getElementById('ticket-view-guest');
+    const viewList = document.getElementById('ticket-view-list');
+    const viewNew = document.getElementById('ticket-view-new');
+    const viewChat = document.getElementById('ticket-view-chat');
+    const ticketListScroll = document.getElementById('ticket-list-scroll');
+    const ticketGuestLoginBtn = document.getElementById('ticket-guest-login');
+    const ticketNewBtn = document.getElementById('ticket-new-btn');
+    const ticketSubjectInput = document.getElementById('ticket-subject-input');
+    const ticketMessageInput = document.getElementById('ticket-message-input');
+    const ticketSubmitBtn = document.getElementById('ticket-submit-btn');
+    const ticketChatScroll = document.getElementById('ticket-chat-scroll');
+    const ticketChatInput = document.getElementById('ticket-chat-input');
+    const ticketChatSendBtn = document.getElementById('ticket-chat-send');
+
+    let activeTicketId = null;
+    let ticketChatPoll = null;
+    let ticketLastTimestamp = 0;
+
+    const escapeHtml = (str) => (str || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const getSession = () => JSON.parse(localStorage.getItem('discord_user') || 'null');
+
+    const showTicketView = (view) => {
+        [viewGuest, viewList, viewNew, viewChat].forEach((v) => { if (v) v.style.display = 'none'; });
+        if (view) view.style.display = 'flex';
+        ticketBackBtn.style.display = (view === viewNew || view === viewChat) ? 'flex' : 'none';
+        if (ticketChatPoll && view !== viewChat) {
+            clearInterval(ticketChatPoll);
+            ticketChatPoll = null;
+        }
+    };
+
+    const openTicketPanel = async () => {
+        ticketPanel.classList.add('active');
+        supportFab.classList.add('active');
+        const session = getSession();
+
+        if (!session || !session.authenticated) {
+            ticketHeading.textContent = 'Support';
+            showTicketView(viewGuest);
+            return;
+        }
+
+        ticketHeading.textContent = 'Your Tickets';
+        showTicketView(viewList);
+        await resolveTicketApi();
+        loadMyTickets();
+    };
+
+    const closeTicketPanel = () => {
+        ticketPanel.classList.remove('active');
+        supportFab.classList.remove('active');
+        if (ticketChatPoll) {
+            clearInterval(ticketChatPoll);
+            ticketChatPoll = null;
+        }
+    };
+
+    const loadMyTickets = async () => {
+        const session = getSession();
+        ticketListScroll.innerHTML = `
+            <div class="ticket-empty-state">
+                <i data-lucide="loader-2" class="spin"></i>
+                <p>Loading your tickets...</p>
+            </div>`;
+        lucide.createIcons();
+
+        try {
+            const res = await fetch(`${ticketApiBase}/api/tickets/mine`, {
+                headers: { Authorization: `Bearer ${session.access_token}` }
+            });
+            if (!res.ok) throw new Error('Failed to load tickets');
+            const tickets = await res.json();
+
+            if (!tickets || tickets.length === 0) {
+                ticketListScroll.innerHTML = `
+                    <div class="ticket-empty-state">
+                        <i data-lucide="inbox"></i>
+                        <p>You don't have any tickets yet. Open one below and our team will help you out.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            ticketListScroll.innerHTML = tickets.map((t) => `
+                <div class="ticket-list-item" data-ticket-id="${t.id}" data-ticket-subject="${escapeHtml(t.subject)}">
+                    <div class="ticket-list-item-top">
+                        <span class="ticket-list-item-subject">${escapeHtml(t.subject)}</span>
+                        <span class="ticket-status-badge ${t.status === 'closed' ? 'closed' : ''}">${t.status === 'closed' ? 'Closed' : 'Open'}</span>
+                    </div>
+                    <div class="ticket-list-item-preview">${escapeHtml(t.lastMessage?.content) || 'No messages yet'}</div>
+                </div>
+            `).join('');
+
+            ticketListScroll.querySelectorAll('.ticket-list-item').forEach((el) => {
+                el.addEventListener('click', () => {
+                    openTicketChat(el.dataset.ticketId, el.dataset.ticketSubject);
+                });
+            });
+        } catch (err) {
+            ticketListScroll.innerHTML = `
+                <div class="ticket-empty-state">
+                    <i data-lucide="alert-triangle"></i>
+                    <p>Couldn't reach support right now. Please try again shortly.</p>
+                </div>`;
+            lucide.createIcons();
+        }
+    };
+
+    const openTicketChat = (ticketId, subject) => {
+        activeTicketId = ticketId;
+        ticketHeading.textContent = subject;
+        showTicketView(viewChat);
+        loadTicketMessages(true);
+        ticketChatPoll = setInterval(() => loadTicketMessages(false), 3000);
+    };
+
+    const loadTicketMessages = async (isFirstLoad) => {
+        const session = getSession();
+        if (isFirstLoad) {
+            ticketChatScroll.innerHTML = `
+                <div class="ticket-empty-state">
+                    <i data-lucide="loader-2" class="spin"></i>
+                    <p>Loading conversation...</p>
+                </div>`;
+            lucide.createIcons();
+        }
+
+        try {
+            const res = await fetch(`${ticketApiBase}/api/tickets/${activeTicketId}/messages`, {
+                headers: { Authorization: `Bearer ${session.access_token}` }
+            });
+            if (!res.ok) throw new Error('Failed to load messages');
+            const messages = await res.json();
+
+            const newest = messages.length ? messages[messages.length - 1].timestamp : 0;
+            if (!isFirstLoad && newest <= ticketLastTimestamp) return;
+            ticketLastTimestamp = newest;
+
+            const wasAtBottom = ticketChatScroll.scrollHeight - ticketChatScroll.scrollTop <= ticketChatScroll.clientHeight + 80;
+
+            ticketChatScroll.innerHTML = messages.map((m) => `
+                <div class="ticket-chat-bubble ${m.isStaff ? 'theirs' : 'mine'}">
+                    <div class="ticket-chat-meta">${m.isStaff ? (m.author || 'Support') : 'You'}</div>
+                    ${escapeHtml(m.content)}
+                </div>
+            `).join('');
+
+            if (isFirstLoad || wasAtBottom) {
+                ticketChatScroll.scrollTop = ticketChatScroll.scrollHeight;
+            }
+        } catch (err) {
+            if (isFirstLoad) {
+                ticketChatScroll.innerHTML = `
+                    <div class="ticket-empty-state">
+                        <i data-lucide="alert-triangle"></i>
+                        <p>Couldn't load this conversation.</p>
+                    </div>`;
+                lucide.createIcons();
+            }
+        }
+    };
+
+    const sendTicketMessage = async () => {
+        const content = ticketChatInput.value.trim();
+        if (!content || !activeTicketId) return;
+        const session = getSession();
+
+        ticketChatInput.value = '';
+        ticketChatSendBtn.disabled = true;
+
+        try {
+            const res = await fetch(`${ticketApiBase}/api/tickets/${activeTicketId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`
+                },
+                body: JSON.stringify({ content })
+            });
+            if (res.ok) loadTicketMessages(false);
+        } catch (err) {
+            // silently ignore — the next poll will retry the state
+        } finally {
+            ticketChatSendBtn.disabled = false;
+        }
+    };
+
+    const submitNewTicket = async () => {
+        const subject = ticketSubjectInput.value.trim();
+        const message = ticketMessageInput.value.trim();
+        if (!subject || !message) return;
+
+        const session = getSession();
+        const btnInner = ticketSubmitBtn.querySelector('.inner');
+        const original = btnInner.innerHTML;
+        btnInner.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Opening...';
+        lucide.createIcons();
+        ticketSubmitBtn.disabled = true;
+
+        try {
+            const res = await fetch(`${ticketApiBase}/api/tickets`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`
+                },
+                body: JSON.stringify({ subject, message })
+            });
+            if (!res.ok) throw new Error('Failed to create ticket');
+            const created = await res.json();
+
+            ticketSubjectInput.value = '';
+            ticketMessageInput.value = '';
+            openTicketChat(created.id, subject);
+        } catch (err) {
+            alert('Could not open a ticket right now. Please try again in a moment.');
+        } finally {
+            btnInner.innerHTML = original;
+            ticketSubmitBtn.disabled = false;
+            lucide.createIcons();
+        }
+    };
+
+    if (supportFab && ticketPanel) {
+        supportFab.addEventListener('click', () => {
+            if (ticketPanel.classList.contains('active')) {
+                closeTicketPanel();
+            } else {
+                openTicketPanel();
+            }
+        });
+
+        if (openTicketsTrigger) {
+            openTicketsTrigger.addEventListener('click', () => {
+                if (userDropdown) userDropdown.classList.remove('active');
+                openTicketPanel();
+            });
+        }
+
+        ticketPanelClose.addEventListener('click', closeTicketPanel);
+
+        ticketBackBtn.addEventListener('click', () => {
+            ticketHeading.textContent = 'Your Tickets';
+            showTicketView(viewList);
+            loadMyTickets();
+        });
+
+        if (ticketGuestLoginBtn) {
+            ticketGuestLoginBtn.addEventListener('click', () => {
+                closeTicketPanel();
+                showModal();
+            });
+        }
+
+        ticketNewBtn.addEventListener('click', () => {
+            ticketHeading.textContent = 'New Ticket';
+            showTicketView(viewNew);
+        });
+
+        ticketSubmitBtn.addEventListener('click', submitNewTicket);
+
+        ticketChatSendBtn.addEventListener('click', sendTicketMessage);
+        ticketChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendTicketMessage();
+        });
+    }
+
 });
 
 

@@ -173,7 +173,7 @@
                         </div>
                         <div class="dropdown-divider"></div>
 
-                        <a href="https://discord.gg/Cr6zAJD2vV" target="_blank" class="dropdown-item">
+                        <a href="javascript:void(0)" class="dropdown-item" id="open-tickets-trigger">
                             <i data-lucide="help-circle"></i> Support
                         </a>
                         <div class="dropdown-divider"></div>
@@ -931,6 +931,79 @@
                 <div class="modal-footer-text">
                     <i data-lucide="lock"></i> Verified by CFX & Tebex
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Support Button -->
+    <button id="support-fab" class="support-fab" aria-label="Open support">
+        <i data-lucide="message-circle"></i>
+    </button>
+
+    <!-- Support Ticket Panel -->
+    <div id="ticket-panel" class="ticket-panel">
+        <div class="ticket-panel-header">
+            <div class="ticket-panel-title">
+                <i data-lucide="life-buoy"></i>
+                <span id="ticket-panel-heading">Support</span>
+            </div>
+            <div class="ticket-panel-actions">
+                <button id="ticket-back-btn" class="ticket-icon-btn" style="display: none;" aria-label="Back to tickets">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <button id="ticket-panel-close" class="ticket-icon-btn" aria-label="Close support">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- View: logged out -->
+        <div id="ticket-view-guest" class="ticket-view">
+            <div class="ticket-empty-state">
+                <i data-lucide="lock"></i>
+                <p>Sign in with Discord to open a support ticket and chat with our team.</p>
+                <button class="button button-primary btn-block" id="ticket-guest-login">
+                    <div class="inner">Login with Discord</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- View: ticket list -->
+        <div id="ticket-view-list" class="ticket-view" style="display: none;">
+            <div class="ticket-list-scroll" id="ticket-list-scroll">
+                <div class="ticket-empty-state">
+                    <i data-lucide="loader-2" class="spin"></i>
+                    <p>Loading your tickets...</p>
+                </div>
+            </div>
+            <div class="ticket-panel-footer">
+                <button class="button button-primary btn-block" id="ticket-new-btn">
+                    <div class="inner"><i data-lucide="plus"></i> New Ticket</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- View: new ticket form -->
+        <div id="ticket-view-new" class="ticket-view" style="display: none;">
+            <div class="ticket-form">
+                <label class="ticket-form-label" for="ticket-subject-input">What do you need help with?</label>
+                <input type="text" id="ticket-subject-input" class="input-field" placeholder="e.g. Script not loading">
+                <label class="ticket-form-label" for="ticket-message-input">Describe the issue</label>
+                <textarea id="ticket-message-input" class="input-field" rows="5" placeholder="Give us as much detail as you can..."></textarea>
+                <button class="button button-primary btn-block" id="ticket-submit-btn">
+                    <div class="inner">Open Ticket</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- View: ticket chat -->
+        <div id="ticket-view-chat" class="ticket-view" style="display: none;">
+            <div class="ticket-chat-scroll" id="ticket-chat-scroll"></div>
+            <div class="ticket-panel-footer ticket-chat-input-row">
+                <input type="text" id="ticket-chat-input" class="input-field" placeholder="Type a message...">
+                <button class="ticket-icon-btn ticket-send-btn" id="ticket-chat-send" aria-label="Send message">
+                    <i data-lucide="send"></i>
+                </button>
             </div>
         </div>
     </div>

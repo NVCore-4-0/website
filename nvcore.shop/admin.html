@@ -251,8 +251,8 @@
 
         .input-field:focus {
             border-color: var(--primary);
-            background: rgba(0, 242, 255, 0.08);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 242, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
 
@@ -620,25 +620,25 @@
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-item active" onclick="switchSection('overview', this)">
+                <div class="nav-item active" data-access="admin,management" onclick="switchSection('overview', this)">
                     <i data-lucide="layout-dashboard"></i> Overview
                 </div>
-                <div class="nav-item" onclick="switchSection('active-tickets', this)">
+                <div class="nav-item" data-access="admin,management,support" onclick="switchSection('active-tickets', this)">
                     <i data-lucide="ticket"></i> Active Tickets
                 </div>
-                <div class="nav-item" onclick="switchSection('transcripts', this)">
+                <div class="nav-item" data-access="admin,management,support" onclick="switchSection('transcripts', this)">
                     <i data-lucide="message-square"></i> Transcripts
                 </div>
-                <div class="nav-item" onclick="switchSection('console', this)">
+                <div class="nav-item" data-access="admin,management" onclick="switchSection('console', this)">
                     <i data-lucide="terminal"></i> Live Console
                 </div>
-                <div class="nav-item" onclick="switchSection('announcements', this)">
+                <div class="nav-item" data-access="admin,management" onclick="switchSection('announcements', this)">
                     <i data-lucide="megaphone"></i> Announcements
                 </div>
-                <div class="nav-item" onclick="switchSection('dm-manager', this)">
+                <div class="nav-item" data-access="admin,management" onclick="switchSection('dm-manager', this)">
                     <i data-lucide="mail"></i> DM Manager
                 </div>
-                <div class="nav-item" onclick="switchSection('audit-logs', this)">
+                <div class="nav-item" data-access="admin,management" onclick="switchSection('audit-logs', this)">
                     <i data-lucide="list"></i> Audit Logs
                 </div>
             </nav>
@@ -1020,6 +1020,36 @@
                 document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${session.id}/${session.avatar}.png`;
             }
 
+            // Section visibility only — cosmetic. Every API call must independently
+            // re-verify the caller's roles server-side; hiding a nav item here does
+            // not stop someone from calling a restricted endpoint directly.
+            const myAccess = [];
+            if (session.isAdministrator) myAccess.push('admin');
+            if (session.isManagement) myAccess.push('management');
+            if (session.isSupportTeam) myAccess.push('support');
+
+            const roleLabel = session.isAdministrator ? 'Administrator'
+                : session.isManagement ? 'Management'
+                : session.isSupportTeam ? 'Support Team'
+                : 'Staff Member';
+            const userStatusEl = document.getElementById('user-status');
+            if (userStatusEl) userStatusEl.innerText = roleLabel;
+
+            let firstVisibleSection = null;
+            document.querySelectorAll('.nav-item[data-access]').forEach((item) => {
+                const allowed = item.dataset.access.split(',').some((r) => myAccess.includes(r));
+                item.style.display = allowed ? '' : 'none';
+                if (allowed && !firstVisibleSection) {
+                    firstVisibleSection = item.getAttribute('onclick').match(/switchSection\('([^']+)'/)[1];
+                }
+            });
+
+            // If the default "Overview" tab isn't visible to this role, jump to the first tab they can see
+            if (firstVisibleSection && firstVisibleSection !== 'overview') {
+                const firstItem = document.querySelector(`.nav-item[onclick*="'${firstVisibleSection}'"]`);
+                if (firstItem) switchSection(firstVisibleSection, firstItem);
+            }
+
             lucide.createIcons();
             loadTranscripts();
         });
@@ -1051,13 +1081,13 @@
             if (sectionId === 'audit-logs') loadAuditLogs();
         }
 
-        // Active Tickets Logic
+        // Active Tickets Logic (on-site tickets, stored in your own DB — not Discord channels)
         async function loadActiveTickets() {
             const list = document.getElementById('active-tickets-list');
             const session = JSON.parse(localStorage.getItem('discord_user'));
 
             try {
-                const response = await fetch(`${API_BASE}/api/tickets/active`, {
+                const response = await fetch(`${API_BASE}/api/tickets/admin/active`, {
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
                 const data = await response.json();
@@ -1069,21 +1099,21 @@
 
                 list.innerHTML = data.map(t => `
                     <div class="transcript-card glass">
-                        <div style="display: flex; justify-content: space-between; align-items: center;" onclick="viewConversation('${t.id}', '${t.name}')">
-                            <span class="ticket-badge">Support Channel</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;" onclick="viewConversation('${t.id}', '${t.subject}')">
+                            <span class="ticket-badge">${t.username || 'User'}</span>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: monospace; opacity: 0.5;">ID: ${t.id}</span>
+                                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: monospace; opacity: 0.5;">#${t.id}</span>
                                 <button class="button" style="padding: 0.2rem; border-radius: 6px; background: rgba(255, 77, 77, 0.1);" onclick="event.stopPropagation(); closeTicket('${t.id}')">
                                     <div class="inner" style="padding: 4px 8px; color: #ff4d4d; border-radius: 6px;"><i data-lucide="lock" style="width: 12px;"></i></div>
                                 </button>
                             </div>
                         </div>
-                        
-                        <h3 style="font-size: 1.25rem; background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;" onclick="viewConversation('${t.id}', '${t.name}')">
-                            #${t.name}
+
+                        <h3 style="font-size: 1.25rem; background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer;" onclick="viewConversation('${t.id}', '${t.subject}')">
+                            ${t.subject}
                         </h3>
-                        
-                        <div class="message-preview" onclick="viewConversation('${t.id}', '${t.name}')" style="cursor: pointer;">
+
+                        <div class="message-preview" onclick="viewConversation('${t.id}', '${t.subject}')" style="cursor: pointer;">
                             <div style="font-weight: 800; color: var(--primary); margin-bottom: 0.4rem; font-size: 0.75rem;">
                                 ${t.lastMessage?.author || 'System'}
                             </div>
@@ -1110,14 +1140,14 @@
             }
         }
 
-        async function viewConversation(channelId, channelName, isPolling = false) {
+        async function viewConversation(ticketId, ticketSubject, isPolling = false) {
             const modal = document.getElementById('viewer-modal');
             const body = document.getElementById('viewer-body');
             const inputContainer = document.getElementById('chat-input-container');
             const footer = document.getElementById('transcript-footer');
 
             if (!isPolling) {
-                document.getElementById('modal-title').innerText = `#${channelName}`;
+                document.getElementById('modal-title').innerText = ticketSubject;
                 document.getElementById('modal-subtitle').innerText = `Active Support Session`;
                 body.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i data-lucide="loader-2" class="spin"></i> Fetching conversation...</div>';
                 lucide.createIcons();
@@ -1129,7 +1159,7 @@
             const session = JSON.parse(localStorage.getItem('discord_user'));
 
             try {
-                const response = await fetch(`${API_BASE}/api/tickets/messages/${channelId}`, {
+                const response = await fetch(`${API_BASE}/api/tickets/${ticketId}/messages`, {
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
                 const messages = await response.json();
@@ -1142,44 +1172,19 @@
                 const wasAtBottom = body.scrollHeight - body.scrollTop <= body.clientHeight + 100;
 
                 body.innerHTML = messages.map(m => {
-                    const session = JSON.parse(localStorage.getItem('discord_user'));
-
-                    // Logic: "Us" (Staff) on right, "Them" (Customer) on left
-                    // If the logged in user sent it, or any other staff member, it's "Staff"
-                    let bubbleClass = 'user'; // Default to left (them)
-                    if (m.type === 'staff' || m.authorId === session.id) {
-                        bubbleClass = 'staff'; // Right (us)
-                    }
-
-                    let embedHtml = '';
-                    if (m.embeds && m.embeds.length > 0) {
-                        embedHtml = m.embeds.map(e => `
-                            <div class="chat-embed" style="border-left-color: ${e.color ? '#' + e.color.toString(16).padStart(6, '0') : 'var(--primary)'}">
-                                ${e.title ? `<div style="font-weight: 800; margin-bottom: 0.3rem;">${e.title}</div>` : ''}
-                                ${e.description ? `<div style="opacity: 0.9;">${e.description}</div>` : ''}
-                                ${e.fields ? e.fields.map(f => `
-                                    <div class="embed-field">
-                                        <div class="embed-field-name">${f.name}</div>
-                                        <div>${f.value}</div>
-                                    </div>
-                                `).join('') : ''}
-                            </div>
-                        `).join('');
-                    }
-
-                    const content = (m.content || '').replace(/<@!?(\d+)>/g, '@User').replace(/<@&(\d+)>/g, '@Role');
-                    const isStaff = bubbleClass === 'staff';
-                    const isSystem = bubbleClass === 'system';
+                    // Staff-authored messages render on the right, the ticket owner's on the left
+                    const bubbleClass = m.isStaff ? 'staff' : 'user';
+                    const content = (m.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
                     return `
                         <div class="chat-bubble ${bubbleClass}">
                             <div class="chat-meta">
-                                ${isStaff || isSystem ? '' : `<img src="${m.avatar}" class="chat-avatar">`}
+                                ${bubbleClass === 'user' ? `<img src="${m.avatar || 'assets/logo.png'}" class="chat-avatar">` : ''}
                                 <span style="font-weight: 700;">${m.author}</span>
                                 <span>${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                ${isStaff ? `<img src="${m.avatar}" class="chat-avatar">` : ''}
+                                ${bubbleClass === 'staff' ? `<img src="${m.avatar || 'assets/logo.png'}" class="chat-avatar">` : ''}
                             </div>
-                            <div style="white-space: pre-wrap;">${content}${embedHtml}</div>
+                            <div style="white-space: pre-wrap;">${content}</div>
                         </div>
                     `;
                 }).join('');
@@ -1198,10 +1203,10 @@
                         if (!content) return;
 
                         replyBtn.disabled = true;
-                        await replyToTicket(channelId, content);
+                        await replyToTicket(ticketId, content);
                         replyInput.value = '';
                         replyBtn.disabled = false;
-                        viewConversation(channelId, channelName, true); // Immediate refresh
+                        viewConversation(ticketId, ticketSubject, true); // Immediate refresh
                     };
 
                     replyInput.onkeypress = (e) => {
@@ -1211,7 +1216,7 @@
                     // Start Polling
                     if (chatPollInterval) clearInterval(chatPollInterval);
                     chatPollInterval = setInterval(() => {
-                        viewConversation(channelId, channelName, true);
+                        viewConversation(ticketId, ticketSubject, true);
                     }, 3000);
                 }
 
@@ -1221,22 +1226,21 @@
             lucide.createIcons();
         }
 
-        async function closeTicket(channelId) {
-            if (!confirm('Are you sure you want to close and delete this ticket channel?')) return;
+        async function closeTicket(ticketId) {
+            if (!confirm('Are you sure you want to close this ticket?')) return;
 
             const session = JSON.parse(localStorage.getItem('discord_user'));
             try {
-                const response = await fetch(`${API_BASE}/api/tickets/close`, {
+                const response = await fetch(`${API_BASE}/api/tickets/${ticketId}/close`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}`
-                    },
-                    body: JSON.stringify({ channelId })
+                    }
                 });
 
                 if (response.ok) {
-                    alert('Ticket closing initiated. Channel will be deleted shortly.');
+                    alert('Ticket closed.');
                     loadActiveTickets();
                     closeModal();
                 } else {
@@ -1247,8 +1251,8 @@
             }
         }
 
-        async function replyToTicket(channelId, forcedContent = null) {
-            const input = document.getElementById(`reply-${channelId}`);
+        async function replyToTicket(ticketId, forcedContent = null) {
+            const input = document.getElementById(`reply-${ticketId}`);
             const content = forcedContent || input?.value.trim();
             if (!content) return;
 
@@ -1264,19 +1268,18 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/tickets/reply`, {
+                const response = await fetch(`${API_BASE}/api/tickets/${ticketId}/messages`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}`
                     },
-                    body: JSON.stringify({ channelId, content })
+                    body: JSON.stringify({ content })
                 });
 
                 if (response.ok) {
                     if (input) input.value = '';
                     if (!forcedContent) {
-                        alert('Reply sent!');
                         loadActiveTickets();
                     }
                 } else {
@@ -1328,12 +1331,12 @@
             list.innerHTML = data.map((t, index) => `
                 <div class="transcript-card glass" onclick="viewTranscript(${index})">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                        <span style="padding: 0.3rem 0.7rem; background: rgba(0, 242, 255, 0.1); color: var(--primary); border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">
-                            ${t.channel.split('-')[0]}
+                        <span style="padding: 0.3rem 0.7rem; background: rgba(255, 255, 255, 0.08); color: var(--primary); border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">
+                            ${t.username || 'Ticket'}
                         </span>
                         <i data-lucide="chevron-right" style="width: 16px; color: var(--text-muted);"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">#${t.channel}</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">${t.subject}</h3>
                     <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.4rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="user" style="width: 14px;"></i> Staff: ${t.closedBy}</div>
                         <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="message-square" style="width: 14px;"></i> ${t.messageCount} messages</div>
@@ -1355,7 +1358,7 @@
                             <i data-lucide="archive" style="width: 20px;"></i>
                         </div>
                         <div>
-                            <div style="font-weight: 600; font-size: 0.95rem;">Ticket Archived: #${t.channel}</div>
+                            <div style="font-weight: 600; font-size: 0.95rem;">Ticket Closed: ${t.subject}</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">Closed by ${t.closedBy}</div>
                         </div>
                     </div>
@@ -1372,21 +1375,26 @@
             const inputContainer = document.getElementById('chat-input-container');
             const footer = document.getElementById('transcript-footer');
 
-            document.getElementById('modal-title').innerText = `Transcript: #${t.channel}`;
+            document.getElementById('modal-title').innerText = `Transcript: ${t.subject}`;
             document.getElementById('modal-subtitle').innerText = `Closed by ${t.closedBy} on ${new Date(t.closedAt).toLocaleString()}`;
 
             inputContainer.style.display = 'none';
             footer.style.display = 'flex';
 
-            body.innerHTML = t.messages.map(m => `
+            body.innerHTML = t.messages.map(m => {
+                const safeContent = m.content
+                    ? m.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    : '<span style="font-style: italic; opacity: 0.5;">*No content*</span>';
+                return `
                 <div class="message-bubble">
                     <div class="message-meta">
                         <span class="message-author">${m.author}</span>
                         <span>${new Date(m.timestamp).toLocaleString()}</span>
                     </div>
-                    <div style="white-space: pre-wrap; line-height: 1.5;">${m.content || '<span style="font-style: italic; opacity: 0.5;">*Attachment or Embed*</span>'}</div>
+                    <div style="white-space: pre-wrap; line-height: 1.5;">${safeContent}</div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             modal.classList.add('active');
             lucide.createIcons();

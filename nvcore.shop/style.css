@@ -3347,3 +3347,331 @@ li {
     font-weight: 700;
 }
 
+/* Shared form input (also used by the support ticket panel) */
+.input-field {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
+    color: var(--white);
+    width: 100%;
+    outline: none;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.input-field:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* Support Ticket System */
+.support-fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(160deg, #ffffff 0%, #d8d8dc 100%);
+    color: #0a0a0c;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+}
+
+.support-fab:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+
+.support-fab.active {
+    background: rgba(20, 20, 23, 0.9);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ticket-panel {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    width: 380px;
+    max-width: calc(100vw - 2rem);
+    height: 560px;
+    max-height: calc(100vh - 8rem);
+    background: rgba(14, 14, 16, 0.92);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ticket-panel.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.ticket-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.ticket-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+}
+
+.ticket-panel-title i {
+    width: 18px;
+    height: 18px;
+    color: var(--primary);
+}
+
+.ticket-panel-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ticket-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ticket-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
+
+.ticket-icon-btn i {
+    width: 16px;
+    height: 16px;
+}
+
+.ticket-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.ticket-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.ticket-empty-state i {
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+}
+
+.ticket-empty-state p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.ticket-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.ticket-list-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: left;
+}
+
+.ticket-list-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.ticket-list-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.3rem;
+}
+
+.ticket-list-item-subject {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.ticket-status-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    background: rgba(34, 197, 94, 0.12);
+    color: #7fd99a;
+}
+
+.ticket-status-badge.closed {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+}
+
+.ticket-list-item-preview {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ticket-panel-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.ticket-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    overflow-y: auto;
+}
+
+.ticket-form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.ticket-form textarea.input-field {
+    flex-shrink: 0;
+}
+
+.ticket-chat-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.ticket-chat-bubble {
+    max-width: 80%;
+    padding: 0.65rem 0.95rem;
+    border-radius: 16px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ticket-chat-bubble.mine {
+    align-self: flex-end;
+    background: linear-gradient(160deg, #f4f4f5, #c8c8cd);
+    color: #0a0a0c;
+    border-bottom-right-radius: 4px;
+}
+
+.ticket-chat-bubble.theirs {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom-left-radius: 4px;
+}
+
+.ticket-chat-bubble .ticket-chat-meta {
+    font-size: 0.68rem;
+    opacity: 0.6;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+}
+
+.ticket-chat-input-row {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.ticket-chat-input-row .input-field {
+    flex: 1;
+}
+
+.ticket-send-btn {
+    background: var(--white);
+    color: #0a0a0c;
+    flex-shrink: 0;
+}
+
+.ticket-send-btn:hover {
+    background: #d8d8dc;
+    color: #0a0a0c;
+}
+
+@media (max-width: 480px) {
+    .ticket-panel {
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+        bottom: 5.5rem;
+    }
+
+    .support-fab {
+        right: 1.25rem;
+        bottom: 1.25rem;
+    }
+}
+
