@@ -1697,7 +1697,7 @@ li {
 }
 
 .member-tag {
-    margin-top: 1rem;
+    margin-top: 0.3rem;
     font-size: 0.65rem;
     font-weight: 800;
     color: var(--primary);
