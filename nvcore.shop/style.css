@@ -427,30 +427,22 @@ li {
 .logo-mark {
     width: 42px;
     height: 42px;
-    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background: radial-gradient(circle at 30% 25%, #2a2a2e, #0c0c0e 75%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease;
     flex-shrink: 0;
 }
 
 .nav-logo-img {
-    height: 130%;
-    width: 130%;
+    height: 100%;
+    width: 100%;
     object-fit: contain;
-    mix-blend-mode: screen;
-    filter: brightness(0.92) contrast(1.15);
+    filter: drop-shadow(0 0 6px var(--primary-glow));
 }
 
 .logo:hover .logo-mark {
     transform: scale(1.05);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 20px var(--primary-glow);
 }
 
 .logo-text {
@@ -1414,22 +1406,17 @@ li {
 .footer-logo-mark {
     width: 34px;
     height: 34px;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background: radial-gradient(circle at 30% 25%, #2a2a2e, #0c0c0e 75%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
     flex-shrink: 0;
 }
 
 .footer-logo-img {
-    height: 130%;
-    width: 130%;
+    height: 100%;
+    width: 100%;
     object-fit: contain;
-    mix-blend-mode: screen;
-    filter: brightness(0.92) contrast(1.15);
+    filter: drop-shadow(0 0 6px var(--primary-glow));
 }
 
 .footer-logo span {
