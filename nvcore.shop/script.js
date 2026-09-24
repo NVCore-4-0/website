@@ -1048,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
 
         try {
-            const res = await fetch(`${ticketApiBase}/api/tickets/mine`, {
+            const res = await fetch(`${ticketApiBase}/api/tickets`, {
                 headers: { Authorization: `Bearer ${session.access_token}` }
             });
             if (!res.ok) throw new Error('Failed to load tickets');
