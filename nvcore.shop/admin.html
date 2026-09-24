@@ -730,6 +730,9 @@
                 <div class="nav-item" data-access="admin,management,support" onclick="switchSection('staff-chat', this)">
                     <i data-lucide="users"></i> Staff Chat
                 </div>
+                <div class="nav-item" data-access="admin,management" onclick="switchSection('reviews', this)">
+                    <i data-lucide="star"></i> Reviews
+                </div>
                 <div class="nav-item" data-access="admin,management" onclick="switchSection('console', this)">
                     <i data-lucide="terminal"></i> Live Console
                 </div>
@@ -869,6 +872,25 @@
                                 <div class="inner" style="padding: 12px 20px;"><i data-lucide="send"></i></div>
                             </button>
                         </div>
+                    </div>
+                </section>
+
+                <!-- Section: Reviews -->
+                <section id="reviews" class="dashboard-section">
+                    <div
+                        style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2>Customer <span>Reviews</span></h2>
+                            <p style="color: var(--text-muted);">Community reviews submitted on the public site.</p>
+                        </div>
+                        <button class="button" onclick="loadReviewsAdmin()">
+                            <div class="inner"><i data-lucide="refresh-cw"></i> Refresh</div>
+                        </button>
+                    </div>
+
+                    <div id="reviews-list" class="transcript-grid">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                            Loading reviews...</div>
                     </div>
                 </section>
 
@@ -1202,6 +1224,7 @@
                 'active-tickets': 'Active Support Tickets',
                 'transcripts': 'Ticket Transcripts',
                 'staff-chat': 'Staff Chat',
+                'reviews': 'Customer Reviews',
                 'console': 'Live Console Bridge',
                 'announcements': 'Announcement Manager',
                 'dm-manager': 'Direct DM Tool',
@@ -1216,6 +1239,7 @@
             if (sectionId === 'active-tickets') loadActiveTickets();
             if (sectionId === 'transcripts') loadTranscripts();
             if (sectionId === 'audit-logs') loadAuditLogs();
+            if (sectionId === 'reviews') loadReviewsAdmin();
             if (sectionId === 'staff-chat') {
                 openStaffChat();
             } else {
@@ -1279,6 +1303,68 @@
 
             } catch (error) {
                 list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #ff4d4d;">Error loading active tickets.</div>';
+            }
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        async function loadReviewsAdmin() {
+            const list = document.getElementById('reviews-list');
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/reviews`, {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No reviews yet.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(r => `
+                    <div class="transcript-card glass">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="ticket-badge">${escapeHtml(r.username)}</span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.7rem; color: var(--text-muted); font-family: monospace; opacity: 0.5;">${new Date(r.createdAt).toLocaleDateString()}</span>
+                                <button class="button" style="padding: 0.2rem; border-radius: 6px; background: rgba(255, 77, 77, 0.1);" onclick="deleteReviewAdmin('${r.id}')">
+                                    <div class="inner" style="padding: 4px 8px; color: #ff4d4d; border-radius: 6px;"><i data-lucide="trash-2" style="width: 12px;"></i></div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-preview" style="margin-top: 0.75rem;">
+                            <div style="color: var(--text-main); line-height: 1.4;">${escapeHtml(r.content)}</div>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+
+            } catch (error) {
+                list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #ff4d4d;">Error loading reviews.</div>';
+            }
+        }
+
+        async function deleteReviewAdmin(reviewId) {
+            if (!confirm('Delete this review? This cannot be undone.')) return;
+            const session = JSON.parse(localStorage.getItem('discord_user'));
+
+            try {
+                const response = await fetch(`${API_BASE}/api/reviews/${reviewId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                if (response.ok) {
+                    showToast('Review deleted.', 'success');
+                    loadReviewsAdmin();
+                } else {
+                    showToast('Failed to delete review.', 'error');
+                }
+            } catch (error) {
+                showToast('Network error — please try again.', 'error');
             }
         }
 

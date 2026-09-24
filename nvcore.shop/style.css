@@ -1586,6 +1586,137 @@ li {
     border-radius: 12px;
 }
 
+/* Community Reviews (user-submitted) */
+.community-reviews {
+    max-width: 1200px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.5rem;
+}
+
+.community-reviews-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.community-review-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.review-card {
+    width: 320px;
+    padding: 1.75rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+}
+
+.review-card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.review-card-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.review-card-name {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 0.95rem;
+}
+
+.review-card-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.review-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.review-card-delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.review-card:hover .review-card-delete {
+    opacity: 1;
+}
+
+.review-card-delete:hover {
+    background: rgba(255, 77, 77, 0.25);
+}
+
+.review-card-delete i {
+    width: 14px;
+    height: 14px;
+}
+
+.review-empty-state {
+    width: 100%;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+
+.review-empty-state i {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 0.75rem;
+}
+
+.review-textarea {
+    width: 100%;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
 /* Team Section — hero-style cards, founders get visual priority */
 .team-columns {
     display: flex;

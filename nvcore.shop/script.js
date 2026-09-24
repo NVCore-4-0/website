@@ -1255,6 +1255,143 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Community Reviews
+    const reviewGrid = document.getElementById('community-review-grid');
+    const writeReviewBtn = document.getElementById('write-review-btn');
+    const reviewModal = document.getElementById('review-modal');
+    const reviewModalClose = document.getElementById('review-modal-close');
+    const reviewModalGuest = document.getElementById('review-modal-guest');
+    const reviewModalForm = document.getElementById('review-modal-form');
+    const reviewModalTextarea = document.getElementById('review-modal-textarea');
+
+    const formatReviewDate = (iso) => {
+        const d = new Date(iso);
+        return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    };
+
+    const renderReviews = (reviews) => {
+        if (!reviewGrid) return;
+
+        if (!reviews || reviews.length === 0) {
+            reviewGrid.innerHTML = `
+                <div class="review-empty-state">
+                    <i data-lucide="message-square"></i>
+                    <p>No community reviews yet. Be the first to share your experience!</p>
+                </div>`;
+            lucide.createIcons();
+            return;
+        }
+
+        const session = getSession();
+        const canModerate = !!(session && session.isStaff);
+
+        reviewGrid.innerHTML = reviews.map((r) => `
+            <div class="review-card glass" data-review-id="${r.id}">
+                ${canModerate ? `
+                    <button type="button" class="review-card-delete" onclick="deleteReview('${r.id}')" aria-label="Delete review">
+                        <i data-lucide="trash-2"></i>
+                    </button>` : ''}
+                <div class="review-card-top">
+                    <img class="review-card-avatar" src="${r.avatar || 'assets/logo.png'}" alt="${escapeHtml(r.username)}">
+                    <div>
+                        <div class="review-card-name">${escapeHtml(r.username)}</div>
+                        <div class="review-card-date">${formatReviewDate(r.createdAt)}</div>
+                    </div>
+                </div>
+                <p>${escapeHtml(r.content)}</p>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    };
+
+    const loadReviews = async () => {
+        if (!reviewGrid) return;
+        try {
+            const res = await fetch('/api/reviews');
+            if (!res.ok) throw new Error('Failed to load reviews');
+            const reviews = await res.json();
+            renderReviews(reviews);
+        } catch (err) {
+            reviewGrid.innerHTML = `
+                <div class="review-empty-state">
+                    <i data-lucide="alert-triangle"></i>
+                    <p>Couldn't load reviews right now.</p>
+                </div>`;
+            lucide.createIcons();
+        }
+    };
+
+    window.deleteReview = async (reviewId) => {
+        if (!confirm('Delete this review?')) return;
+        const session = getSession();
+        if (!session || !session.access_token) return;
+        try {
+            const res = await fetch(`/api/reviews/${reviewId}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${session.access_token}` }
+            });
+            if (res.ok) {
+                loadReviews();
+            } else {
+                alert('Failed to delete review.');
+            }
+        } catch (err) {
+            alert('Network error — please try again.');
+        }
+    };
+
+    if (writeReviewBtn && reviewModal) {
+        writeReviewBtn.addEventListener('click', () => {
+            const session = getSession();
+            const loggedIn = !!(session && session.authenticated && session.access_token);
+            if (reviewModalGuest) reviewModalGuest.style.display = loggedIn ? 'none' : 'block';
+            if (reviewModalForm) reviewModalForm.style.display = loggedIn ? 'block' : 'none';
+            reviewModal.classList.add('active');
+        });
+    }
+
+    if (reviewModalClose && reviewModal) {
+        reviewModalClose.addEventListener('click', () => reviewModal.classList.remove('active'));
+        reviewModal.querySelector('.modal-backdrop').addEventListener('click', () => reviewModal.classList.remove('active'));
+    }
+
+    if (reviewModalForm) {
+        reviewModalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const session = getSession();
+            if (!session || !session.access_token) return;
+            const content = reviewModalTextarea.value.trim();
+            if (!content) return;
+
+            const submitBtn = reviewModalForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ content })
+                });
+                if (res.ok) {
+                    reviewModalTextarea.value = '';
+                    reviewModal.classList.remove('active');
+                    loadReviews();
+                } else {
+                    alert('Failed to submit review.');
+                }
+            } catch (err) {
+                alert('Network error — please try again.');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    loadReviews();
+
 });
 
 

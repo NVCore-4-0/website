@@ -672,51 +672,47 @@
                 <span class="section-tag">Reviews</span>
                 <h2 class="section-title">Client <span>Feedback</span></h2>
             </div>
-            <div class="testimonial-grid" data-reveal="fade-up">
-                <div class="testimonial-item glass">
-                    <div class="quote-icon"><i data-lucide="quote"></i></div>
-                    <p>"NVCore has transformed our server. Their optimization scripts are unparalleled."</p>
-                    <div class="client-info">
-                        <div class="client-avatar glass">
-                            <i data-lucide="server"></i>
-                            <div class="avatar-glow"></div>
-                        </div>
-                        <div class="client-details">
-                            <strong>Lost Paradise Roleplay</strong>
-                            <span>Server Owner</span>
-                        </div>
-                    </div>
+            <div class="community-reviews" data-reveal="fade-up">
+                <div class="community-reviews-header">
+                    <button type="button" class="button button-primary" id="write-review-btn">
+                        <div class="inner"><i data-lucide="pencil-line"></i> Write a Review</div>
+                    </button>
                 </div>
-                <div class="testimonial-item glass">
-                    <div class="quote-icon"><i data-lucide="quote"></i></div>
-                    <p>"The custom UI they built is beautiful and performance-friendly. Best in the business."</p>
-                    <div class="client-info">
-                        <div class="client-avatar glass">
-                            <i data-lucide="server"></i>
-                            <div class="avatar-glow"></div>
-                        </div>
-                        <div class="client-details">
-                            <strong>Eclipse Roleplay</strong>
-                            <span>Server Owner</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-item glass">
-                    <div class="quote-icon"><i data-lucide="quote"></i></div>
-                    <p>"Professional, fast, and reliable. Their server setup services saved us weeks of work."</p>
-                    <div class="client-info">
-                        <div class="client-avatar glass">
-                            <i data-lucide="server"></i>
-                            <div class="avatar-glow"></div>
-                        </div>
-                        <div class="client-details">
-                            <strong>Project X FiveM</strong>
-                            <span>Head Developer</span>
-                        </div>
+                <div class="community-review-grid" id="community-review-grid">
+                    <div class="review-empty-state">
+                        <i data-lucide="loader-2" class="spin"></i>
+                        <p>Loading reviews...</p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Write Review Modal -->
+        <div id="review-modal" class="modal-wrapper">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass">
+                <div class="modal-close" id="review-modal-close">
+                    <i data-lucide="x"></i>
+                </div>
+                <div class="modal-body">
+                    <div id="review-modal-guest">
+                        <h3>Sign in to leave a review</h3>
+                        <p>Log in with Discord so we know it's really you.</p>
+                        <button type="button" class="button button-primary btn-block store-login-btn">
+                            <div class="inner"><i data-lucide="message-circle"></i> Sign in with Discord</div>
+                        </button>
+                    </div>
+                    <form id="review-modal-form" style="display:none;">
+                        <h3>Write a Review</h3>
+                        <p>Tell other server owners about your experience with NVCore.</p>
+                        <textarea id="review-modal-textarea" class="review-textarea" maxlength="500" rows="4" placeholder="Share your experience..." required></textarea>
+                        <button type="submit" class="button button-primary btn-block">
+                            <div class="inner"><i data-lucide="send"></i> Submit Review</div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Discord Proof Layer Section -->
         <section class="discord-proof section">

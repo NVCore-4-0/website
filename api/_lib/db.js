@@ -53,6 +53,19 @@ async function ensureSchema() {
     `;
 
     await sql`CREATE INDEX IF NOT EXISTS idx_staff_messages_created_at ON staff_messages(created_at)`;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS reviews (
+        id SERIAL PRIMARY KEY,
+        discord_id TEXT NOT NULL,
+        username TEXT NOT NULL,
+        avatar TEXT,
+        content TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      )
+    `;
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_reviews_created_at ON reviews(created_at)`;
   })();
 
   return schemaReady;
