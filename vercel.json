@@ -1,6 +1,6 @@
 {
   "outputDirectory": "nvcore.shop",
-  "cleanUrls": false,
+  "cleanUrls": true,
   "rewrites": [
     { "source": "/home", "destination": "/index.html" },
     { "source": "/about", "destination": "/index.html" },

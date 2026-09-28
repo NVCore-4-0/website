@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                     <p class="project-desc">Verified Purchase. Linked to your Discord Account.</p>
                                     <div class="project-actions">
-                                        <a href="documentation.html" class="button btn-detail" style="width: 100%;">
+                                        <a href="/documentation" class="button btn-detail" style="width: 100%;">
                                             <div class="inner">Documentation</div>
                                         </a>
                                     </div>
