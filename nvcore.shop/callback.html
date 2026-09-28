@@ -68,7 +68,7 @@
             const fail = (msg) => {
                 titleEl.innerHTML = 'Sign in failed';
                 messageEl.textContent = msg;
-                setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+                setTimeout(() => { window.location.href = '/'; }, 2500);
             };
 
             const params = new URLSearchParams(window.location.hash.slice(1));
@@ -138,16 +138,16 @@
                     };
                     localStorage.setItem('discord_user', JSON.stringify(session));
 
-                    let returnUrl = 'index.html';
+                    let returnUrl = '/';
                     if (state && state !== 'none') {
                         try {
                             returnUrl = decodeURIComponent(state);
                         } catch (e) {
-                            returnUrl = 'index.html';
+                            returnUrl = '/';
                         }
                     }
                     localStorage.removeItem('return_url');
-                    window.location.href = returnUrl || 'index.html';
+                    window.location.href = returnUrl || '/';
                 })
                 .catch(() => {
                     fail('Could not verify your Discord account. Please try again.');
