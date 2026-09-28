@@ -110,6 +110,9 @@
                     <div class="docs-nav-item" data-target="doc-fpsbooster">
                         <i data-lucide="zap"></i> NV-FPS Booster
                     </div>
+                    <div class="docs-nav-item" data-target="doc-fpsbooster-install">
+                        <i data-lucide="download"></i> FPS Booster Install
+                    </div>
 
                     <div class="docs-nav-title">Open Source</div>
                     <div class="docs-nav-item" data-target="doc-spawneffect-os">
@@ -357,6 +360,125 @@ Config.LodScales = {
     High = 0.8
 }</code></pre>
                         </div>
+                    </div>
+                </div>
+
+                <!-- NV-FPS Booster Installation Section -->
+                <div id="doc-fpsbooster-install" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">FPS Booster <span>Installation</span></h1>
+                        <p class="doc-subtitle">A complete, step-by-step guide to getting NV-FPS Booster running on
+                            your QBX server.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge free"><i data-lucide="gift"></i> Free Resource</div>
+                            <div class="doc-badge escrow"><i data-lucide="lock"></i> CFX Escrowed</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="list-checks"></i> Requirements</h2>
+                        <ul>
+                            <li><strong>QBX Core:</strong> This script is built specifically for QBX-based servers.</li>
+                            <li><strong>ox_lib:</strong> Required for the NUI menu and notifications. Make sure it's
+                                started before the FPS Booster.</li>
+                            <li>A registered <a href="https://keymaster.fivem.net/asset-grants" target="_blank">FiveM
+                                    Keymaster</a> account linked to the Discord you purchased with.</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="shopping-cart"></i> Step 1 — Claim the Script</h2>
+                        <p>Grab NV-FPS Booster from our store — it's completely free:</p>
+                        <ol>
+                            <li>Head to the <a href="https://nvcore.tebex.store/" target="_blank">NVCore Tebex
+                                    Store</a> and add NV-FPS Booster to your cart.</li>
+                            <li>Complete checkout (no payment required for free resources).</li>
+                            <li>Once claimed, the resource is automatically added to your <a
+                                    href="https://keymaster.fivem.net/asset-grants" target="_blank">FiveM
+                                    Keymaster</a> under the account linked at checkout.</li>
+                        </ol>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="download"></i> Step 2 — Download &amp; Extract</h2>
+                        <ol>
+                            <li>Open your server's <code>txAdmin</code> or FTP client.</li>
+                            <li>Pull the resource from your Keymaster grant, or download it directly from your
+                                server's asset list in-game via <code>ensure</code> once whitelisted.</li>
+                            <li>Place the extracted folder into your <code>resources</code> directory — for example
+                                <code>resources/[nvcore]/nv-fpsbooster</code>.
+                            </li>
+                        </ol>
+                        <div class="doc-alert warning">
+                            <i data-lucide="alert-triangle"></i>
+                            <div>
+                                <strong>Important:</strong> Do not rename the resource folder. This is an
+                                Escrow-protected script — renaming it will break the license check and it will fail
+                                to start.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="terminal"></i> Step 3 — Add to server.cfg</h2>
+                        <p>Add the resource to your <code>server.cfg</code>. Make sure <code>ox_lib</code> is
+                            ensured <em>before</em> the FPS Booster:</p>
+                        <div class="doc-code-block" data-lang="server.cfg">
+                            <pre><code>ensure ox_lib
+
+# NV-FPS Booster
+ensure nv-fpsbooster</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="settings"></i> Step 4 — Configure (Optional)</h2>
+                        <p>Open <code>shared/config.lua</code> if you want to change the menu command, notification
+                            position, or LOD scaling values:</p>
+                        <div class="doc-code-block" data-lang="config.lua">
+                            <pre><code>Config = {}
+Config.Command = "fps"
+Config.Notifications = {
+    Position = "top-right",
+    Duration = 3000
+}</code></pre>
+                        </div>
+                        <p>Leave this file untouched if the defaults work for you — no configuration is required to
+                            get the script running.</p>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="rocket"></i> Step 5 — Restart &amp; Test</h2>
+                        <ol>
+                            <li>Restart your server, or run <code>refresh</code> followed by <code>ensure
+                                    nv-fpsbooster</code> in your server console.</li>
+                            <li>Join your server and run <code>/fps</code> in chat to open the FPS Booster menu.</li>
+                            <li>Select a Boost Level (Lite, Medium, High, or Ultra) and confirm your FPS counter
+                                improves.</li>
+                        </ol>
+                        <div class="doc-alert info">
+                            <i data-lucide="info"></i>
+                            <div>
+                                <strong>Tip:</strong> Toggle on <em>Special NV Boost</em> for the best balance of
+                                visuals and performance, and enable <em>Night Performance</em> if your server does
+                                heavy night-cycle roleplay.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="bug"></i> Troubleshooting</h2>
+                        <ul>
+                            <li><strong>Menu won't open:</strong> Confirm <code>ox_lib</code> is started before
+                                <code>nv-fpsbooster</code> in your <code>server.cfg</code>.
+                            </li>
+                            <li><strong>Script won't start / license error:</strong> The resource folder was likely
+                                renamed. Re-extract it fresh from your Keymaster without changing the folder name.
+                            </li>
+                            <li><strong>Still stuck?</strong> Open a support ticket on our <a
+                                    href="https://discord.gg/Cr6zAJD2vV" target="_blank">Discord</a> and our team
+                                will help you out.</li>
+                        </ul>
                     </div>
                 </div>
 
