@@ -1,5 +1,5 @@
-const { sql, ensureSchema } = require('../../_lib/db');
-const { getDiscordUser, getStaffLevel } = require('../../_lib/auth');
+const { sql, ensureSchema } = require('../_lib/db');
+const { getDiscordUser, getStaffLevel } = require('../_lib/auth');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'DELETE') {
