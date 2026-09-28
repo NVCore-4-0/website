@@ -1122,6 +1122,18 @@ li {
     filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.4));
 }
 
+.project-card-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover .project-card-banner {
+    transform: scale(1.05);
+}
+
 .project-content {
     padding: 1.5rem;
     flex-grow: 1;
