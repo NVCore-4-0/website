@@ -361,8 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Fetch User Scripts from Bot Host
-        fetch(`http://ny-us-01.soulixer.in:25432/api/user/scripts/${userSession.id}`)
-            .then(res => res.json())
+        const controller = new AbortController();
+        const requestTimeout = setTimeout(() => controller.abort(), 5000);
+        fetch(`http://ny-us-01.soulixer.in:25432/api/user/scripts/${userSession.id}`, { signal: controller.signal })
+            .finally(() => clearTimeout(requestTimeout))
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
             .then(scripts => {
                 const myScriptsGrid = document.getElementById('my-scripts-grid');
                 if (myScriptsGrid) {
@@ -407,7 +413,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (myScriptsGrid) {
                     myScriptsGrid.innerHTML = `
                         <div style="text-align: center; width: 100%; color: var(--text-muted); padding: 2rem;">
-                            Failed to load your scripts. Backend offline.
+                            <p>Unable to load your scripts at the moment.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Please try again later or contact support.</p>
+                            <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary, #4f46e5); border: 1px solid var(--border); border-radius: 4px; color: white; cursor: pointer;">
+                                Retry
+                            </button>
                         </div>
                     `;
                 }
