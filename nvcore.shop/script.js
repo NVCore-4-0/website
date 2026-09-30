@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch User Scripts from Bot Host
         const controller = new AbortController();
         const requestTimeout = setTimeout(() => controller.abort(), 5000);
-        fetch(`http://ny-us-01.soulixer.in:25432/api/user/scripts/${userSession.id}`, { signal: controller.signal })
+        fetch(`/api/scripts/${encodeURIComponent(userSession.id)}`, { signal: controller.signal })
             .finally(() => clearTimeout(requestTimeout))
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
