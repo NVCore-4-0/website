@@ -113,6 +113,12 @@
                     <div class="docs-nav-item" data-target="doc-fpsbooster-install">
                         <i data-lucide="download"></i> FPS Booster Install
                     </div>
+                    <div class="docs-nav-item" data-target="doc-gps">
+                        <i data-lucide="map-pin"></i> NV-GPS
+                    </div>
+                    <div class="docs-nav-item" data-target="doc-gps-install">
+                        <i data-lucide="download"></i> GPS Install
+                    </div>
 
                     <div class="docs-nav-title">Open Source</div>
                     <div class="docs-nav-item" data-target="doc-spawneffect-os">
@@ -478,6 +484,202 @@ Config.Notifications = {
                             <li><strong>Still stuck?</strong> Open a support ticket on our <a
                                     href="https://discord.gg/Cr6zAJD2vV" target="_blank">Discord</a> and our team
                                 will help you out.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- NV-GPS Section -->
+                <div id="doc-gps" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">NV-<span>GPS</span></h1>
+                        <p class="doc-subtitle">Real-time GPS tracking network for Police &amp; EMS.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge free"><i data-lucide="gift"></i> Free Resource</div>
+                            <div class="doc-badge escrow"><i data-lucide="lock"></i> CFX Escrowed</div>
+                            <div class="doc-badge"><i data-lucide="map-pin"></i> Live Blips</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="radio"></i> How It Works</h2>
+                        <p>Emergency units use a GPS item (or the <code>/gps</code> command) to open a secure
+                            connection panel, enter a callsign, and join the emergency GPS network. Once connected,
+                            every unit appears live on the map for the rest of the network with a department-coloured
+                            blip that changes with their vehicle.</p>
+                        <ul>
+                            <li><strong>Secure connect UI:</strong> Confirm, animated connection steps, and a
+                                connected status screen showing department and unit ID.</li>
+                            <li><strong>Callsigns:</strong> Format <code>X-100</code> (1–3 letters, hyphen, 1–4
+                                digits). Read from your framework or police script when available, otherwise entered
+                                by the player and saved.</li>
+                            <li><strong>Auto detection:</strong> Works with wasabi_police, p_policejob, pluto and
+                                any police/EMS script that uses the framework job. Duty state is respected.</li>
+                            <li><strong>Vehicle-aware blips:</strong> Separate icons for on foot, car, motorcycle,
+                                helicopter, plane and boat, with per-job colours and labels.</li>
+                            <li><strong>Frameworks:</strong> QBCore, Qbox and ESX. Inventory: ox_inventory or the
+                                framework's own inventory.</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="terminal"></i> Commands &amp; Exports</h2>
+                        <div class="doc-code-block" data-lang="commands">
+                            <pre><code>/gps - Opens the GPS connect / disconnect panel (same as using the item)</code></pre>
+                        </div>
+                        <div class="doc-code-block" data-lang="exports (client)">
+                            <pre><code>exports.nv_gps:useGPS()          -- opens the panel (used by the inventory item)
+exports.nv_gps:isGpsActive()
+exports.nv_gps:isGpsConnected()</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NV-GPS Installation Section -->
+                <div id="doc-gps-install" class="doc-section">
+                    <div class="doc-header">
+                        <h1 class="doc-title">GPS <span>Installation</span></h1>
+                        <p class="doc-subtitle">Step-by-step setup, including the <code>gps</code> inventory item for
+                            ox_inventory and QBCore.</p>
+                        <div class="doc-badges">
+                            <div class="doc-badge free"><i data-lucide="gift"></i> Free Resource</div>
+                            <div class="doc-badge escrow"><i data-lucide="lock"></i> CFX Escrowed</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="list-checks"></i> Requirements</h2>
+                        <ul>
+                            <li><strong>Framework:</strong> QBCore, Qbox or ESX.</li>
+                            <li><strong>ox_lib:</strong> Used for notifications. Start it before NV-GPS.</li>
+                            <li><strong>Inventory (optional):</strong> ox_inventory, qb-inventory or similar. Only
+                                needed while <code>Config.RequireItem = true</code>.</li>
+                            <li>A <a href="https://keymaster.fivem.net/asset-grants" target="_blank">FiveM
+                                    Keymaster</a> account linked to the Discord you claimed with.</li>
+                        </ul>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="shopping-cart"></i> Step 1 — Claim &amp; Download</h2>
+                        <ol>
+                            <li>Add NV-GPS to your cart on the <a href="https://nvcore.tebex.store/"
+                                    target="_blank">NVCore Tebex Store</a> and complete checkout.</li>
+                            <li>Download it from your Keymaster grant and place the folder in your
+                                <code>resources</code> directory, for example <code>resources/[nvcore]/nv_gps</code>.
+                            </li>
+                        </ol>
+                        <div class="doc-alert warning">
+                            <i data-lucide="alert-triangle"></i>
+                            <div>
+                                <strong>Important:</strong> Keep the folder name <code>nv_gps</code>. The script is
+                                Escrow-protected and the ox_inventory item export
+                                (<code>nv_gps.useGPS</code>) depends on this exact name.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="package"></i> Step 2 — Add the Item (ox_inventory)</h2>
+                        <p>Open <code>ox_inventory/data/items.lua</code> and add this entry. This is also the setup
+                            for Qbox servers using ox_inventory:</p>
+                        <div class="doc-code-block" data-lang="ox_inventory/data/items.lua">
+                            <pre><code>['gps'] = {
+    label = 'GPS Tracker',
+    weight = 200,
+    stack = false,
+    close = true,
+    description = 'Encrypted GPS tracker for emergency services.',
+    client = {
+        export = 'nv_gps.useGPS'
+    }
+},</code></pre>
+                        </div>
+                        <p>Then copy the item image to <code>ox_inventory/web/images/gps.png</code>.</p>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="package"></i> Step 3 — Add the Item (QBCore)</h2>
+                        <p>Open <code>qb-core/shared/items.lua</code> and add:</p>
+                        <div class="doc-code-block" data-lang="qb-core/shared/items.lua">
+                            <pre><code>gps = {
+    name = 'gps',
+    label = 'GPS Tracker',
+    weight = 200,
+    type = 'item',
+    image = 'gps.png',
+    unique = false,
+    useable = true,
+    shouldClose = true,
+    description = 'Encrypted GPS tracker for emergency services.'
+},</code></pre>
+                        </div>
+                        <p>Copy the item image to your inventory's image folder, for example
+                            <code>qb-inventory/html/images/gps.png</code>. NV-GPS registers the item as usable
+                            automatically, so no extra code is needed.</p>
+                        <div class="doc-alert info">
+                            <i data-lucide="info"></i>
+                            <div>
+                                <strong>Don't want an item?</strong> Set <code>Config.RequireItem = false</code> in
+                                <code>config.lua</code> and players can connect with <code>/gps</code> only. If you
+                                use a different item name, change <code>Config.ItemName</code> and use the same name
+                                in the item entries above.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="terminal"></i> Step 4 — Add to server.cfg</h2>
+                        <div class="doc-code-block" data-lang="server.cfg">
+                            <pre><code>ensure ox_lib
+
+# NV-GPS
+ensure nv_gps</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="settings"></i> Step 5 — Configure</h2>
+                        <p><code>config.lua</code> is left open so you can edit it:</p>
+                        <div class="doc-code-block" data-lang="config.lua">
+                            <pre><code>Config.UpdateInterval = 1000     -- blip update rate (ms)
+Config.RequireItem = true        -- require the item to connect
+Config.ItemName = 'gps'
+Config.ToggleCommand = 'gps'
+Config.ShowSelfBlip = true       -- show your own blip with [YOU] tag
+Config.AutoDetect = true         -- detect police/EMS jobs automatically
+Config.TrackedJobs = { 'police', 'lspd', 'ambulance', 'ems', ... }
+Config.JobSettings = {           -- per-job blip label / colour / scale
+    ['police'] = { label = 'LSPD', color = 3, scale = 0.85, category = 7, shortRange = false },
+}</code></pre>
+                        </div>
+                        <p>Using a police script with its own job, duty or callsign logic? Point
+                            <code>Config.Custom</code> at its exports (<code>isEmergencyJob</code>,
+                            <code>isOnDuty</code>, <code>getCallsign</code>).</p>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="rocket"></i> Step 6 — Restart &amp; Test</h2>
+                        <ol>
+                            <li>Restart the server (or <code>refresh</code> then <code>ensure nv_gps</code>), and
+                                restart your inventory so the new item loads.</li>
+                            <li>Give yourself the item, for example <code>/giveitem [id] gps 1</code> (admin command
+                                varies by framework).</li>
+                            <li>Go on duty as police or EMS, use the item or run <code>/gps</code>, enter a callsign
+                                and connect.</li>
+                        </ol>
+                    </div>
+
+                    <div class="doc-block">
+                        <h2><i data-lucide="bug"></i> Troubleshooting</h2>
+                        <ul>
+                            <li><strong>Item does nothing (ox_inventory):</strong> The folder isn't named
+                                <code>nv_gps</code>, or the <code>export</code> line is missing from the item.</li>
+                            <li><strong>"Encrypted for Emergency Services only":</strong> The player's job isn't
+                                tracked. Add it to <code>Config.TrackedJobs</code> or use
+                                <code>Config.Custom</code>.</li>
+                            <li><strong>"You must be On-Duty":</strong> Go on duty with your police/EMS script
+                                first.</li>
+                            <li><strong>Still stuck?</strong> Open a ticket on our <a
+                                    href="https://discord.gg/Cr6zAJD2vV" target="_blank">Discord</a>.</li>
                         </ul>
                     </div>
                 </div>
