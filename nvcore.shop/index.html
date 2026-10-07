@@ -15,11 +15,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com/" crossorigin>
+    <link rel="preload" as="image" href="assets/logo.webp">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap"
         rel="stylesheet">
     <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="unique.css">
@@ -138,7 +139,7 @@
     <!-- Loading Screen -->
     <div id="loader" class="loader-wrapper">
         <div class="loader-content">
-            <span class="loader-logo-mark"><img src="assets/logo.png" alt="NVCore" class="loader-logo"></span>
+            <span class="loader-logo-mark"><img src="assets/logo.webp" alt="NVCore" class="loader-logo"></span>
             <span class="loader-text"></span>
         </div>
     </div>
@@ -147,7 +148,7 @@
     <nav id="navbar" class="navbar">
         <div class="container">
             <a class='logo' href='/'>
-                <span class="logo-mark"><img src="assets/logo.png" alt="NVCore Logo" class="nav-logo-img"></span>
+                <span class="logo-mark"><img src="assets/logo.webp" alt="NVCore Logo" class="nav-logo-img"></span>
                 <span class="logo-text"><span class="brand-name">NVCORE</span><span class="dot">.</span><span class="brand-suffix">SHOP</span></span>
             </a>
             <ul class="nav-links">
@@ -362,10 +363,44 @@
                 <!-- Escrow Scripts Category -->
                 <div class="download-category active" data-category="escrow" data-reveal="fade-up">
                     <div class="projects-grid">
+                        <!-- NV-GPS (ESCROW) -->
+                        <div class="project-card glass" data-reveal="fade-up" data-delay="100">
+                            <div class="project-img">
+                                <img src="assets/NV_gps.webp" alt="NV-GPS Emergency Network" class="project-card-banner" loading="lazy">
+                            </div>
+                            <div class="project-content">
+                                <div class="project-header">
+                                    <h3 class="project-title">NV-GPS (ESCROW)</h3>
+                                    <span class="project-price free">FREE</span>
+                                </div>
+                                <p class="project-desc">A real-time GPS tracking network for Police &amp; EMS. Units
+                                    connect through a secure, animated UI with a custom callsign, then appear live on
+                                    the map for their department. Duty state and callsigns sync with your framework.
+                                    Escrow-protected with an open config.
+                                </p>
+                                <ul class="project-tags">
+                                    <li><i data-lucide="map-pin"></i> Live Tracking</li>
+                                    <li><i data-lucide="siren"></i> Police &amp; EMS</li>
+                                    <li><i data-lucide="shield"></i> Escrow</li>
+                                </ul>
+                                <div class="project-actions">
+                                    <a class='button btn-detail' href='/documentation'>
+                                        <div class="inner">Documentation</div>
+                                    </a>
+                                    <a href="https://nvcore.tebex.store/" target="_blank"
+                                        class="button btn-buy">
+                                        <div class="inner">
+                                            Store
+                                            <i data-lucide="shopping-cart"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <!-- NV-FPS Booster (ESCROW) — Upcoming -->
                         <div class="project-card glass" data-reveal="fade-up" data-delay="200">
                             <div class="project-img">
-                                <img src="assets/NV_fpsbooster.png" alt="NV-FPS Booster" class="project-card-banner" loading="lazy">
+                                <img src="assets/NV_fpsbooster.webp" alt="NV-FPS Booster" class="project-card-banner" loading="lazy">
                             </div>
                             <div class="project-content">
                                 <div class="project-header">
@@ -406,7 +441,7 @@
                         <div class="project-card glass" data-reveal="fade-up">
                             <div class="project-img">
                                 <div class="placeholder-img">
-                                    <img src="assets/logo.png" alt="NVCore Logo" class="project-card-logo" loading="lazy">
+                                    <img src="assets/logo.webp" alt="NVCore Logo" class="project-card-logo" loading="lazy">
                                 </div>
                             </div>
                             <div class="project-content">
@@ -453,7 +488,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/discord-avatar-night__77.png" alt="Night" loading="lazy">
+                                <img src="assets/discord-avatar-night__77.webp" alt="Night" loading="lazy">
                             </div>
                             <h4>Night</h4>
                             <p>Creator</p>
@@ -461,7 +496,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="100">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/Neo.jpg" alt="Neo" loading="lazy">
+                                <img src="assets/Neo.webp" alt="Neo" loading="lazy">
                             </div>
                             <h4>Neo</h4>
                             <p>Creator</p>
@@ -469,7 +504,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="200">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/Dark.gif" alt="Dark" loading="lazy">
+                                <img src="assets/Dark.webp" alt="Dark" loading="lazy">
                             </div>
                             <h4>DARK</h4>
                             <p>Vehicle Developer</p>
@@ -477,7 +512,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="300">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/nitish.png" alt="Nitish" loading="lazy">
+                                <img src="assets/nitish.webp" alt="Nitish" loading="lazy">
                             </div>
                             <h4>Nitish</h4>
                             <p>UI Developer</p>
@@ -491,7 +526,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/syno.png" alt="Syno" loading="lazy">
+                                <img src="assets/syno.webp" alt="Syno" loading="lazy">
                             </div>
                             <h4>Syno</h4>
                             <p>Developer</p>
@@ -505,7 +540,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/luci.png" alt="Luci" loading="lazy">
+                                <img src="assets/luci.webp" alt="Luci" loading="lazy">
                             </div>
                             <h4>Luci</h4>
                             <p>Management</p>
@@ -513,7 +548,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up" data-delay="100">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/revenox.png" alt="Revenox" loading="lazy" onerror="this.parentElement.classList.add('avatar-fallback'); this.remove();">
+                                <img src="assets/revenox.webp" alt="Revenox" loading="lazy" onerror="this.parentElement.classList.add('avatar-fallback'); this.remove();">
                                 <span class="avatar-fallback-text">R</span>
                             </div>
                             <h4>Revenox</h4>
@@ -528,7 +563,7 @@
                         <div class="team-member-card glass" data-reveal="fade-up">
                             <div class="glare"></div>
                             <div class="member-avatar">
-                                <img src="assets/Masterx.gif" alt="MasterX" loading="lazy">
+                                <img src="assets/Masterx.webp" alt="MasterX" loading="lazy">
                             </div>
                             <h4>MasterX</h4>
                             <p>GFX Artist</p>
@@ -716,7 +751,7 @@
                             <div class="discord-card-body">
                                 <div class="community-status">
                                     <div class="status-icon">
-                                        <img src="assets/logo.png" alt="NVCore" loading="lazy">
+                                        <img src="assets/logo.webp" alt="NVCore" loading="lazy">
                                     </div>
                                     <div class="status-info">
                                         <h4>NVCore Official</h4>
@@ -785,7 +820,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo"><span class="footer-logo-mark"><img src="assets/logo.png" alt="NVCore Logo" class="footer-logo-img" loading="lazy"></span> NVCORE<span>.</span>SHOP</div>
+                <div class="footer-logo"><span class="footer-logo-mark"><img src="assets/logo.webp" alt="NVCore Logo" class="footer-logo-img" loading="lazy"></span> NVCORE<span>.</span>SHOP</div>
                 <p>&copy; 2024 NVCore Development Team. All rights reserved.</p>
                 <div class="footer-links"
                     style="margin: 1rem 0; display: flex; gap: 2rem; justify-content: center; font-size: 0.9rem; color: var(--text-muted);">
@@ -982,7 +1017,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
     <script src="script.js"></script>
 </body>
 

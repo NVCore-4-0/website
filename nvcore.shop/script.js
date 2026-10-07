@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Low-end device detection: weak CPU/RAM, data-saver, or reduced-motion preference.
+    // Adds .lite to <html>, which strips blur/backdrop-filter and infinite animations in CSS.
+    const conn = navigator.connection;
+    const isLite = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+        (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+        (conn && conn.saveData) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isLite) document.documentElement.classList.add('lite');
+
     // Initialize Lucide Icons
     lucide.createIcons();
 
@@ -48,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.style.display = 'none';
-            }, 500);
-        }, 1000);
+            }, 400);
+        }, 150);
     };
 
     if (document.readyState === 'complete') {
@@ -60,13 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
+    let navScrolled = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+        const next = window.scrollY > 50;
+        if (next !== navScrolled) {
+            navScrolled = next;
+            navbar.classList.toggle('scrolled', next);
         }
-    });
+    }, { passive: true });
 
     // Intersection Observer for Reveal Animations
     const revealElements = document.querySelectorAll('[data-reveal]');
@@ -526,15 +536,16 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = stars;
     };
 
-    generateStars(document.getElementById('stars-deep'), 90, [0.4, 0.8], [0.08, 0.25]);
-    generateStars(document.getElementById('stars-far'), 70, [0.7, 1.4], [0.15, 0.45]);
-    generateStars(document.getElementById('stars-near'), 35, [1.3, 2.4], [0.35, 0.85]);
+    const starScale = isLite ? 0.3 : 1;
+    generateStars(document.getElementById('stars-deep'), Math.round(90 * starScale), [0.4, 0.8], [0.08, 0.25]);
+    generateStars(document.getElementById('stars-far'), Math.round(70 * starScale), [0.7, 1.4], [0.15, 0.45]);
+    generateStars(document.getElementById('stars-near'), Math.round(35 * starScale), [1.3, 2.4], [0.35, 0.85]);
 
     // Galaxy band: dense star cluster concentrated along the strip
     const galaxyStarsEl = document.getElementById('galaxy-stars');
     if (galaxyStarsEl) {
         let stars = '';
-        for (let i = 0; i < 130; i++) {
+        for (let i = 0; i < (isLite ? 40 : 130); i++) {
             const x = Math.random() * 100;
             // Gaussian-ish clustering toward vertical center for a dense band look
             const y = 50 + (Math.random() + Math.random() + Math.random() - 1.5) * 30;
@@ -662,7 +673,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const astronaut = document.getElementById('astronaut');
     const astronautTilt = astronaut ? astronaut.querySelector('.astronaut-tilt') : null;
 
-    if (astronaut && astronautTilt && window.matchMedia('(min-width: 769px)').matches) {
+    if (astronaut && astronautTilt && !isLite && window.matchMedia('(min-width: 769px)').matches) {
         // Single source of truth for the astronaut's screen position (px from top-left)
         let posX = window.innerWidth * 0.78;
         let posY = window.innerHeight * 0.2;

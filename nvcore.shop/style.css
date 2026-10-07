@@ -3669,3 +3669,41 @@ li {
     }
 }
 
+
+/* ===== Performance: lite mode (low-end devices / reduced motion / data saver) ===== */
+html.lite *,
+html.lite *::before,
+html.lite *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.lite .blob-wrapper,
+html.lite .background-blob,
+html.lite .gradient-sphere,
+html.lite .cta-section .sphere-1,
+html.lite .cta-section .sphere-2 {
+    filter: none !important;
+    animation: none !important;
+}
+
+html.lite .star,
+html.lite .astronaut,
+html.lite .hero-content,
+html.lite .hero-bob {
+    animation: none !important;
+}
+
+html.lite .star {
+    opacity: 0.4;
+}
+
+html.lite [data-reveal] {
+    transition-duration: 0.2s !important;
+}
+
+/* Skip rendering work for off-screen sections */
+.section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 700px;
+}
