@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Low-end device detection: weak CPU/RAM, data-saver, or reduced-motion preference.
     // Adds .lite to <html>, which strips blur/backdrop-filter and infinite animations in CSS.
-    const conn = navigator.connection;
-    const isLite = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
-        (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-        (conn && conn.saveData) ||
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isLite) document.documentElement.classList.add('lite');
+    // Lite mode is on for everyone (also set early in <head>): no backdrop blur, blurred blobs,
+    // star twinkle or astronaut. Keeps the site smooth on integrated GPUs and phones.
+    const isLite = true;
+    document.documentElement.classList.add('lite');
 
     // Initialize Lucide Icons
     lucide.createIcons();

@@ -3707,3 +3707,22 @@ html.lite [data-reveal] {
     content-visibility: auto;
     contain-intrinsic-size: auto 700px;
 }
+
+/* Extra lite-mode savings */
+html.lite .floating-icon,
+html.lite .galaxy-core,
+html.lite .galaxy-band {
+    animation: none !important;
+    filter: none !important;
+}
+
+html.lite .glass,
+html.lite .project-card,
+html.lite .team-member-card {
+    transition-property: transform, opacity, border-color !important;
+}
+
+html.lite .cosmic-stars-deep,
+html.lite .cosmic-stars-far {
+    display: none;
+}
